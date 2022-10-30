@@ -12,6 +12,7 @@ class AudioPlayerBottomNavbar extends StatefulWidget {
 }
 
 class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
+  // final audioPlayer = AudioPlayer();
   final assetsAudioPlayer = AssetsAudioPlayer();
   bool isPlaying = false;
   Duration duration = Duration.zero;
@@ -21,6 +22,8 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    // setAudio();
 
     // Listen to state: playing, paused, stopped
     // audioPlayer.onPlayerStateChanged.listen((state) {
@@ -39,13 +42,19 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
     // final url = await player.load('ChuaQuenNguoiYeuCuLiveVersion.mp3');
     // audioPlayer
     //     .setSourceAsset("assets/audio/ChuaQuenNguoiYeuCuLiveVersion.mp3");
+
+    // Load audio from Url
+    // String url =
+    //     "https://zing-mp3-api.onrender.com/api/v1/file/Bong-Hong-Thuy-Tinh-Buc-Tuong.mp3";
+    // await audioPlayer.setSourceUrl(url);
+    // await audioPlayer.resume();
   }
 
   // @override
   // void dispose() {
-  //   // TODO: implement dispose
+  //     // TODO: implement dispose
   //   super.dispose();
-  //   // audioPlayer.dispose();
+  //   audioPlayer.dispose();
   // }
 
   @override
@@ -53,87 +62,99 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
     Size size = MediaQuery.of(context).size;
     // assetsAudioPlayer
     //     .open(Audio("assets/audio/ChuaQuenNguoiYeuCuLiveVersion.mp3"));
-    return Container(
-      color: Theme.of(context).bottomAppBarColor,
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(100)),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Lâu Lâu Nhắc Lại",
-                        style: Theme.of(context).textTheme.displaySmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "Hà Nhi, Khói",
-                        style: Theme.of(context).textTheme.labelSmall,
-                      )
-                    ],
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/song');
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+        decoration: BoxDecoration(
+            color: Theme.of(context).bottomAppBarColor,
+            border: Border(
+                top: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 3))),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(100)),
                   ),
-                )
-              ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Lâu Lâu Nhắc Lại",
+                          style: Theme.of(context).textTheme.displaySmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Hà Nhi, Khói",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minHeight: 46, minWidth: 44),
-                icon: Icon(CupertinoIcons.heart,
-                    color: Theme.of(context).primaryColorDark),
-              ),
-              IconButton(
-                onPressed: () async {
-                  if (isPlaying) {
-                    // await audioPlayer.pause();
-                  } else {
-                    // await audioPlayer.resume();
-                  }
-                },
-                constraints: const BoxConstraints(minHeight: 46, minWidth: 44),
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  Icons.play_arrow_rounded,
-                  size: 34,
-                  color: Theme.of(context).primaryColorDark,
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  padding: EdgeInsets.zero,
+                  constraints:
+                      const BoxConstraints(minHeight: 46, minWidth: 44),
+                  icon: Icon(CupertinoIcons.heart,
+                      color: Theme.of(context).primaryColorDark),
                 ),
-              ),
-              IconButton(
-                onPressed: () {},
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minHeight: 46, minWidth: 44),
-                icon: Icon(
-                  Icons.skip_next_rounded,
-                  size: 38,
-                  color: Theme.of(context).primaryColorDark,
+                IconButton(
+                  onPressed: () async {
+                    if (isPlaying) {
+                      // await audioPlayer.pause();
+                    } else {
+                      // await audioPlayer.resume();
+                    }
+                  },
+                  constraints:
+                      const BoxConstraints(minHeight: 46, minWidth: 44),
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.play_arrow_rounded,
+                    size: 34,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
                 ),
-              ),
-            ],
-          )
-        ],
+                IconButton(
+                  onPressed: () {},
+                  padding: EdgeInsets.zero,
+                  constraints:
+                      const BoxConstraints(minHeight: 46, minWidth: 44),
+                  icon: Icon(
+                    Icons.skip_next_rounded,
+                    size: 38,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

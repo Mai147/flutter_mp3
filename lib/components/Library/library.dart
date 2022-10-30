@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/components/Library/library_navbar.dart';
+import 'package:flutter_mp3/components/Library/LibraryNavbar/library_navbar.dart';
 import 'package:flutter_mp3/components/Library/library_slider_item.dart';
 
 class Library extends StatelessWidget {
@@ -12,7 +12,7 @@ class Library extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20, left: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,7 +30,10 @@ class Library extends StatelessWidget {
                           LibrabySliderItem(
                             isRawIcon: true,
                             icon: CupertinoIcons.heart_fill,
-                            colors: [Colors.greenAccent, Colors.blueAccent],
+                            colors: [
+                              Color.fromARGB(255, 77, 233, 254),
+                              Color.fromARGB(255, 73, 181, 255)
+                            ],
                             title: "Bài hát",
                             count: 50,
                           ),
@@ -85,7 +88,7 @@ class Library extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: LibraryNavbar(),
         )
       ],

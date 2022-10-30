@@ -21,13 +21,20 @@ class LibrabySliderItem extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-      width: size.width / 2 - 30,
+      width: size.width / 2,
       height: 110,
-      padding: const EdgeInsets.fromLTRB(0, 14, 14, 0),
+      padding: const EdgeInsets.fromLTRB(6, 14, 14, 6),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).backgroundColor),
+            color: Theme.of(context).backgroundColor,
+            boxShadow: [
+              BoxShadow(
+                  color: Theme.of(context).shadowColor,
+                  offset: const Offset(1, 1),
+                  blurRadius: 2,
+                  spreadRadius: 1)
+            ]),
         padding: const EdgeInsets.all(14),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,13 +67,15 @@ class LibrabySliderItem extends StatelessWidget {
     return ShaderMask(
       shaderCallback: (Rect bounds) {
         return RadialGradient(
-          center: Alignment.topLeft,
-          radius: 1.8,
-          colors: colors,
-        ).createShader(bounds);
+                center: Alignment.topLeft,
+                radius: 1.8,
+                colors: colors,
+                tileMode: TileMode.mirror)
+            .createShader(bounds);
       },
       child: Icon(
         icon,
+        color: Colors.white,
         size: 40,
       ),
     );

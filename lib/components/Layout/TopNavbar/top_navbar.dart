@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search.dart';
+import 'package:flutter_mp3/pages/setting_page.dart';
 
 class TopNavbar extends StatelessWidget {
   const TopNavbar({super.key});
@@ -7,7 +8,7 @@ class TopNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,11 +34,14 @@ class TopNavbar extends StatelessWidget {
           ),
           const Expanded(
               child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 6, 0),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Search(),
           )),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/setting');
+            },
+            constraints: BoxConstraints(),
             padding: EdgeInsets.zero,
             icon: Icon(
               Icons.settings_outlined,
