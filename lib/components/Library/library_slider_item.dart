@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LibrabySliderItem extends StatelessWidget {
-  // final Widget icon;
   final bool isRawIcon;
   final IconData icon;
   final List<Color> colors;
   final String title;
   final int? count;
+  final void Function()? clickEvent;
 
   const LibrabySliderItem(
       {required this.isRawIcon,
@@ -14,50 +14,54 @@ class LibrabySliderItem extends StatelessWidget {
       required this.colors,
       required this.title,
       this.count,
+      this.clickEvent,
       super.key});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width / 2,
-      height: 110,
-      padding: const EdgeInsets.fromLTRB(6, 14, 14, 6),
+    return InkWell(
+      onTap: clickEvent,
       child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).backgroundColor,
-            boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context).shadowColor,
-                  offset: const Offset(1, 1),
-                  blurRadius: 2,
-                  spreadRadius: 1)
-            ]),
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            isRawIcon ? buildRawIcon() : buildRoundedIcon(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  count.toString() != "null" ? count.toString() : "",
-                  style: Theme.of(context).textTheme.labelMedium,
-                )
-              ],
-            ),
-          ],
+        width: size.width / 2,
+        height: 110,
+        padding: const EdgeInsets.fromLTRB(0, 14, 14, 6),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                    color: Theme.of(context).shadowColor,
+                    offset: const Offset(1, 1),
+                    blurRadius: 2,
+                    spreadRadius: 1)
+              ]),
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              isRawIcon ? buildRawIcon() : buildRoundedIcon(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Text(
+                    count.toString() != "null" ? count.toString() : "",
+                    style: Theme.of(context).textTheme.labelMedium,
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

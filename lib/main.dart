@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/constants/colors/colors_constant.dart';
-import 'package:flutter_mp3/pages/personal_page.dart';
-import 'package:flutter_mp3/pages/setting_page.dart';
+import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
+import 'package:flutter_mp3/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -27,11 +27,7 @@ class MyApp extends StatelessWidget {
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: MaterialApp(
               initialRoute: '/',
-              routes: {
-                '/': (context) => const PersonalPage(),
-                '/setting': (context) => const SettingPage(),
-                '/song': (context) => const SongPage()
-              },
+              routes: routes,
               debugShowCheckedModeBanner: false,
               themeMode: themeObj.mode,
               theme: ThemeData(
@@ -43,6 +39,7 @@ class MyApp extends StatelessWidget {
                 primaryColorLight: Colors.white,
                 dividerColor: ColorsConstant.lightBorderColor,
                 shadowColor: ColorsConstant.lightShadowColor,
+                disabledColor: ColorsConstant.lightDisabledColor,
                 scaffoldBackgroundColor: ColorsConstant.lightBackgroundColor,
                 bottomAppBarColor: ColorsConstant.lightBottomNavbarColor,
                 iconTheme:
@@ -60,6 +57,10 @@ class MyApp extends StatelessWidget {
                         color: ColorsConstant.blackColor,
                         fontSize: 14,
                         fontWeight: FontWeight.bold),
+                    displayLarge: TextStyle(
+                      color: ColorsConstant.blackColor,
+                      fontSize: 20,
+                    ),
                     displayMedium: TextStyle(
                       color: ColorsConstant.blackColor,
                       fontSize: 14,
@@ -71,7 +72,9 @@ class MyApp extends StatelessWidget {
                     labelMedium: TextStyle(
                         color: ColorsConstant.lightTextColor, fontSize: 12),
                     labelSmall: TextStyle(
-                        color: ColorsConstant.lightTextColor, fontSize: 10)),
+                        color: ColorsConstant.lightTextColor,
+                        fontSize: 10,
+                        letterSpacing: 0.8)),
                 // fontFamily: 'Karla',
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
@@ -84,6 +87,7 @@ class MyApp extends StatelessWidget {
                 primaryColorLight: ColorsConstant.blackColor,
                 dividerColor: ColorsConstant.darkBorderColor,
                 shadowColor: ColorsConstant.darkShadowColor,
+                disabledColor: ColorsConstant.darkDisabledColor,
                 scaffoldBackgroundColor: ColorsConstant.darkBackgroundColor,
                 bottomAppBarColor: ColorsConstant.darkBottomNavbarColor,
                 iconTheme:
@@ -101,6 +105,10 @@ class MyApp extends StatelessWidget {
                         color: ColorsConstant.whiteColor,
                         fontSize: 14,
                         fontWeight: FontWeight.bold),
+                    displayLarge: TextStyle(
+                      color: ColorsConstant.whiteColor,
+                      fontSize: 20,
+                    ),
                     displayMedium: TextStyle(
                       color: ColorsConstant.whiteColor,
                       fontSize: 16,
@@ -110,9 +118,11 @@ class MyApp extends StatelessWidget {
                       fontSize: 12,
                     ),
                     labelMedium: TextStyle(
-                        color: ColorsConstant.darkTextColor, fontSize: 12),
+                        color: ColorsConstant.darkTextColor, fontSize: 14),
                     labelSmall: TextStyle(
-                        color: ColorsConstant.darkTextColor, fontSize: 10)),
+                        color: ColorsConstant.darkTextColor,
+                        fontSize: 10,
+                        letterSpacing: 0.8)),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
               title: 'Flutter Mp3',

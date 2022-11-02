@@ -39,7 +39,7 @@ class _SongPlayerSliderState extends State<SongPlayerSlider> {
             child: Slider(
               min: const Duration(microseconds: 0).inSeconds.toDouble(),
               value: widget.position.inSeconds.toDouble(),
-              max: widget.duration.inSeconds.toDouble() + 1,
+              max: widget.duration.inSeconds.toDouble(),
               onChanged: (value) {
                 setState(() {
                   changeToSeconds(value.toInt());

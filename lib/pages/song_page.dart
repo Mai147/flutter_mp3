@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/Song/SongLyrics/song_lyrics.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player.dart';
+import 'package:flutter_mp3/models/SongModel.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:provider/provider.dart';
 
 class SongPage extends StatefulWidget {
-  const SongPage({super.key});
+  final SongModel song;
+
+  const SongPage({required this.song, super.key});
 
   @override
   State<SongPage> createState() => _SongPageState();
@@ -12,6 +18,7 @@ class SongPage extends StatefulWidget {
 class _SongPageState extends State<SongPage> {
   @override
   Widget build(BuildContext context) {
+    var songProvider = Provider.of<SongProvider>(context);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -27,12 +34,12 @@ class _SongPageState extends State<SongPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Lâu Lâu Nhắc Lại",
+                songProvider.getActiveSong().title,
                 style: Theme.of(context).textTheme.titleMedium,
                 maxLines: 1,
               ),
               Text(
-                "Hà Nhi, Khói",
+                songProvider.getActiveSong().author,
                 style: Theme.of(context).textTheme.labelMedium,
                 maxLines: 1,
               )
@@ -58,9 +65,11 @@ class _SongPageState extends State<SongPage> {
                   activeSize: 6)),
           itemBuilder: ((context, index) {
             return index == 0
-                ? SongPlayer()
+                ? SongPlayer(
+                    song: widget.song,
+                  )
                 : index == 1
-                    ? Text("Hello")
+                    ? SongLyrics(song: widget.song)
                     : Text("Hello 2");
           }),
         ));

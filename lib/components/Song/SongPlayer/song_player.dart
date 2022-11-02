@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player_slider.dart';
+import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
 class SongPlayer extends StatefulWidget {
-  const SongPlayer({super.key});
+  final SongModel song;
+
+  const SongPlayer({required this.song, super.key});
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -14,21 +17,17 @@ class SongPlayer extends StatefulWidget {
 class _SongPlayerState extends State<SongPlayer> {
   Duration duration = Duration();
   Duration position = Duration();
-  bool isPlaying = true;
   bool isRandom = false;
-  bool isRepeat = true;
+  double turns = 0.0;
   var durationEvent;
   var positionEvent;
-  // StreamSubscription durationEvent = StreamSubscription();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     var songProvider = Provider.of<SongProvider>(context, listen: false);
-    songProvider.initAudioPLayer();
-    isPlaying = songProvider.audioPlayer.playing;
-    isRepeat = songProvider.audioPlayer.loopMode == LoopMode.one;
+    songProvider.initAudioPLayer(widget.song);
 
     durationEvent = songProvider.audioPlayer.durationStream.listen((d) {
       setState(() {
@@ -39,6 +38,7 @@ class _SongPlayerState extends State<SongPlayer> {
     positionEvent = songProvider.audioPlayer.positionStream.listen((p) {
       setState(() {
         position = p;
+        turns += 1.0 / 100.0;
       });
     });
   }
@@ -62,12 +62,21 @@ class _SongPlayerState extends State<SongPlayer> {
           const SizedBox(
             height: 60,
           ),
-          Container(
-            width: size.width - 80,
-            height: size.width - 80,
-            decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(size.width)),
+          AnimatedRotation(
+            turns: turns,
+            duration: Duration(milliseconds: 300),
+            child: Container(
+              width: size.width - 80,
+              height: size.width - 80,
+              decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(size.width)),
+              child: Center(
+                  child: Text(
+                songProvider.getActiveSong().title,
+                style: TextStyle(fontSize: 30),
+              )),
+            ),
           ),
           const SizedBox(
             height: 30,
@@ -94,57 +103,55 @@ class _SongPlayerState extends State<SongPlayer> {
                               : Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: !songProvider.isFirstSong()
+                            ? () {
+                                songProvider.prevSong();
+                              }
+                            : null,
                         icon: Icon(
                           Icons.skip_previous,
                           size: 30,
-                          color: Theme.of(context).primaryColorDark,
+                          color: !songProvider.isFirstSong()
+                              ? Theme.of(context).primaryColorDark
+                              : Theme.of(context).disabledColor,
                         )),
                     IconButton(
                         onPressed: () {
-                          if (isPlaying) {
-                            songProvider.audioPlayer.pause();
-                          } else {
-                            songProvider.audioPlayer.play();
-                          }
-                          setState(() {
-                            isPlaying = !isPlaying;
-                          });
+                          songProvider.changePlayingState();
                         },
                         constraints:
                             const BoxConstraints(minHeight: 114, minWidth: 114),
                         padding: const EdgeInsets.all(24),
                         icon: Icon(
-                          !isPlaying
+                          !songProvider.audioPlayer.playing
                               ? Icons.play_circle_outline
                               : Icons.pause_circle_outline,
                           size: 70,
                           color: Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: !songProvider.isLastSong()
+                            ? () {
+                                songProvider.nextSong();
+                              }
+                            : null,
                         icon: Icon(
                           Icons.skip_next,
                           size: 30,
-                          color: Theme.of(context).primaryColorDark,
+                          color: !songProvider.isLastSong()
+                              ? Theme.of(context).primaryColorDark
+                              : Theme.of(context).disabledColor,
                         )),
                     IconButton(
                         onPressed: () {
-                          LoopMode currentLoop =
-                              songProvider.audioPlayer.loopMode;
-                          songProvider.audioPlayer.setLoopMode(
-                              currentLoop == LoopMode.one
-                                  ? LoopMode.off
-                                  : LoopMode.one);
-                          setState(() {
-                            isRepeat = !isRepeat;
-                          });
+                          songProvider.changeLoopMode();
                         },
                         icon: Icon(
                           Icons.repeat,
-                          color: isRepeat
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).primaryColorDark,
+                          color:
+                              songProvider.audioPlayer.loopMode == LoopMode.one
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).primaryColorDark,
                         )),
                   ],
                 )

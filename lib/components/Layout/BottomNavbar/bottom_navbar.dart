@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/components/Audio/audio_player_bottom_navbar.dart';
+import 'package:flutter_mp3/components/Layout/BottomNavbar/audio_player_bottom_navbar.dart';
 import 'package:flutter_mp3/components/Layout/BottomNavbar/bottom_navbar_item.dart';
 
 class BottomNavbar extends StatelessWidget {

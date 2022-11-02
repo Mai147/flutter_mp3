@@ -28,9 +28,8 @@ class _SettingModalState extends State<SettingModal> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ThemeMode themeMode =
-        Provider.of<ThemeProvider>(context, listen: false).mode;
-    modeActive = themeMode == ThemeMode.light ? "light" : "dark";
+    String mode = Provider.of<ThemeProvider>(context, listen: false).modeString;
+    modeActive = mode;
   }
 
   @override
@@ -72,6 +71,16 @@ class _SettingModalState extends State<SettingModal> {
                     clickEvent: () {
                       changeMode("dark");
                     }),
+                SettingModalItem(
+                    title: "Theo thiết bị",
+                    isActive: modeActive == "device",
+                    clickEvent: () {
+                      setState(() {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .setByDeviceMode();
+                        Navigator.pop(context);
+                      });
+                    })
               ],
             ),
           ),

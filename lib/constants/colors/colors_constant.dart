@@ -11,6 +11,7 @@ class ColorsConstant {
   static const Color darkTextColor = Color.fromARGB(255, 120, 120, 120);
   static const Color darkBorderColor = Color.fromARGB(255, 32, 34, 49);
   static const Color darkShadowColor = Color.fromARGB(255, 25, 25, 25);
+  static const Color darkDisabledColor = Color.fromARGB(255, 150, 150, 150);
   static const Color lightPrimaryColor = Color.fromARGB(255, 155, 77, 224);
   static const Color lightBackgroundColor = Color.fromARGB(255, 254, 254, 254);
   static const Color lightBottomNavbarColor =
@@ -21,4 +22,5 @@ class ColorsConstant {
   static const Color lightTextColor = Color.fromARGB(255, 120, 120, 120);
   static const Color lightBorderColor = Color.fromARGB(255, 244, 244, 244);
   static const Color lightShadowColor = Color.fromARGB(255, 231, 231, 231);
+  static const Color lightDisabledColor = Color.fromARGB(255, 150, 150, 150);
 }

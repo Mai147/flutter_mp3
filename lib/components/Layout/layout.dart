@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/Audio/audio.dart';
 import 'package:flutter_mp3/components/Layout/BottomNavbar/bottom_navbar.dart';
 import 'package:flutter_mp3/components/Layout/TopNavbar/top_navbar.dart';
 
@@ -40,7 +41,11 @@ class Layout extends StatelessWidget {
           child: SingleChildScrollView(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [hasTopNav ? const TopNavbar() : Container(), child],
+            children: [
+              hasTopNav ? const TopNavbar() : Container(),
+              const Audio(),
+              child
+            ],
           )),
         ),
         bottomNavigationBar: const BottomNavbar());

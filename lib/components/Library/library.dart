@@ -58,13 +58,16 @@ class Library extends StatelessWidget {
                         ],
                       ),
                       Row(
-                        children: const [
+                        children: [
                           LibrabySliderItem(
                             isRawIcon: false,
                             icon: Icons.arrow_downward,
                             colors: [Colors.purpleAccent, Colors.purple],
                             title: "Trên thiết bị",
                             count: 50,
+                            clickEvent: () {
+                              Navigator.pushNamed(context, '/library/device');
+                            },
                           ),
                           LibrabySliderItem(
                             isRawIcon: true,
