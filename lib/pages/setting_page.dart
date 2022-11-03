@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
 import 'package:flutter_mp3/components/Layout/layout.dart';
 import 'package:flutter_mp3/components/Setting/SettingModal/setting_modal.dart';
 import 'package:flutter_mp3/components/Setting/setting_item.dart';
@@ -22,15 +23,9 @@ class SettingPage extends StatelessWidget {
               icon: Icons.brightness_4_outlined,
               title: "Giao diện",
               clickEvent: () {
-                showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    backgroundColor: Theme.of(context).bottomAppBarColor,
-                    builder: (BuildContext context) {
-                      return SettingModal();
-                    });
+                var modal =
+                    BottomModal(context: context, child: SettingModal());
+                modal.initModal();
               },
             ),
           ],

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:provider/provider.dart';
 
 class SongLyrics extends StatelessWidget {
-  final SongModel song;
-
-  const SongLyrics({required this.song, super.key});
+  const SongLyrics({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var audioProvider = Provider.of<AudioProvider>(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Column(
           children: [
             Text(
-              song.lyrics ?? "Bài hát này chưa có lời",
+              audioProvider.getActiveSong().lyrics ?? "Bài hát này chưa có lời",
               style: TextStyle(
                   color: Theme.of(context).primaryColorDark,
                   fontSize: 22,

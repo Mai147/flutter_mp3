@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 
 class SongPlayerSlider extends StatefulWidget {
@@ -17,8 +17,8 @@ class _SongPlayerSliderState extends State<SongPlayerSlider> {
 
   void changeToSeconds(int seconds) {
     Duration d = Duration(seconds: seconds);
-    var songProvider = Provider.of<SongProvider>(context, listen: false);
-    songProvider.audioPlayer.seek(d);
+    var audioPlayer = Provider.of<AudioProvider>(context, listen: false);
+    audioPlayer.audioPlayer.seek(d);
   }
 
   @override

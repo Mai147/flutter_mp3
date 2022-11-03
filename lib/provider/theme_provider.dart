@@ -3,31 +3,26 @@ import 'package:flutter/material.dart';
 class ThemeProvider with ChangeNotifier {
   ThemeMode _mode;
   ThemeMode get mode => _mode;
-  String _modeString;
-  String get modeString => _modeString;
-  ThemeProvider({ThemeMode mode = ThemeMode.dark, String modeString = "dark"})
+  String _modeName;
+  String get modeName => _modeName;
+  ThemeProvider({ThemeMode mode = ThemeMode.dark, String modeName = "dark"})
       : _mode = mode,
-        _modeString = modeString;
-
-  // void toggleMode() {
-  //   _mode = _mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-  //   notifyListeners();
-  // }
+        _modeName = modeName;
 
   void setLightMode() {
     _mode = ThemeMode.light;
-    _modeString = "light";
+    _modeName = "light";
     notifyListeners();
   }
 
   void setDarkMode() {
     _mode = ThemeMode.dark;
-    _modeString = "dark";
+    _modeName = "dark";
     notifyListeners();
   }
 
   void setByDeviceMode() {
-    _modeString = "device";
+    _modeName = "device";
     changeByDeviceMode();
   }
 

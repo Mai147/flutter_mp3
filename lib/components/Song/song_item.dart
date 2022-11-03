@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
-import 'package:flutter_mp3/components/Library/Device/library_device_modal.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
-import 'package:flutter_mp3/pages/song_page.dart';
 
-class LibraryDeviceItem extends StatelessWidget {
+class SongItem extends StatelessWidget {
   final SongModel song;
-
-  const LibraryDeviceItem({required this.song, super.key});
+  const SongItem({required this.song, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        var modal = BottomModal(
-            context: context,
-            child: SongPage(
-              song: song,
-            ));
-        modal.initFullScreenModal();
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
+    return Column(
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
+            Expanded(
               child: Row(
                 children: [
                   Container(
@@ -48,9 +35,6 @@ class LibraryDeviceItem extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(
-                          height: 4,
-                        ),
                         Text(
                           song.author,
                           style: Theme.of(context).textTheme.labelMedium,
@@ -64,24 +48,32 @@ class LibraryDeviceItem extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 16,
+              width: 30,
             ),
-            IconButton(
-              onPressed: () {
-                var modal = BottomModal(
-                    context: context,
-                    child: LibraryDeviceModal(
-                      song: song,
-                    ));
-                modal.initModal();
-              },
-              icon: Icon(Icons.more_vert),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.playlist_add),
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.more_vert),
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints())
+              ],
             )
           ],
         ),
-      ),
+        const SizedBox(
+          height: 16,
+        )
+      ],
     );
   }
 }

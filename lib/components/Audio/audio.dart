@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
@@ -18,16 +18,16 @@ class _AudioState extends State<Audio> {
     // TODO: implement initState
     super.initState();
 
-    var songProvider = Provider.of<SongProvider>(context, listen: false);
+    var audioProvider = Provider.of<AudioProvider>(context, listen: false);
 
-    positionEvent = songProvider.audioPlayer.positionStream.listen((p) {
-      if (p >= songProvider.audioPlayer.duration! &&
-          songProvider.audioPlayer.playing &&
-          songProvider.audioPlayer.loopMode == LoopMode.off) {
-        if (songProvider.isLastSong()) {
-          songProvider.changePlayingState();
+    positionEvent = audioProvider.audioPlayer.positionStream.listen((p) {
+      if (p >= audioProvider.audioPlayer.duration! &&
+          audioProvider.audioPlayer.playing &&
+          audioProvider.audioPlayer.loopMode == LoopMode.off) {
+        if (audioProvider.isLastSong()) {
+          audioProvider.changePlayingState();
         } else {
-          songProvider.nextSong();
+          audioProvider.nextSong();
         }
       }
     });

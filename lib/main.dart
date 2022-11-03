@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mp3/constants/colors/colors_constant.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
 import 'package:flutter_mp3/routes/routes.dart';
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ThemeProvider()),
-          ChangeNotifierProvider(create: (context) => SongProvider())
+          ChangeNotifierProvider(create: (context) => AudioProvider()),
+          ChangeNotifierProvider(create: (context) => SongProvider()),
         ],
         child: Consumer<ThemeProvider>(
           builder: (context, themeObj, _) => GestureDetector(
@@ -42,8 +44,10 @@ class MyApp extends StatelessWidget {
                 disabledColor: ColorsConstant.lightDisabledColor,
                 scaffoldBackgroundColor: ColorsConstant.lightBackgroundColor,
                 bottomAppBarColor: ColorsConstant.lightBottomNavbarColor,
+                inputDecorationTheme: const InputDecorationTheme(
+                    fillColor: ColorsConstant.lightSearchBackgroundColor),
                 iconTheme:
-                    const IconThemeData(color: Color.fromARGB(255, 80, 80, 80)),
+                    const IconThemeData(color: ColorsConstant.lightIconColor),
                 textTheme: const TextTheme(
                     titleLarge: TextStyle(
                         color: ColorsConstant.blackColor,
@@ -69,6 +73,8 @@ class MyApp extends StatelessWidget {
                       color: ColorsConstant.blackColor,
                       fontSize: 12,
                     ),
+                    labelLarge: TextStyle(
+                        color: ColorsConstant.lightTextColor, fontSize: 16),
                     labelMedium: TextStyle(
                         color: ColorsConstant.lightTextColor, fontSize: 12),
                     labelSmall: TextStyle(
@@ -87,6 +93,8 @@ class MyApp extends StatelessWidget {
                 primaryColorLight: ColorsConstant.blackColor,
                 dividerColor: ColorsConstant.darkBorderColor,
                 shadowColor: ColorsConstant.darkShadowColor,
+                inputDecorationTheme: const InputDecorationTheme(
+                    fillColor: ColorsConstant.darkSearchBackgroundColor),
                 disabledColor: ColorsConstant.darkDisabledColor,
                 scaffoldBackgroundColor: ColorsConstant.darkBackgroundColor,
                 bottomAppBarColor: ColorsConstant.darkBottomNavbarColor,
@@ -117,6 +125,8 @@ class MyApp extends StatelessWidget {
                       color: ColorsConstant.whiteColor,
                       fontSize: 12,
                     ),
+                    labelLarge: TextStyle(
+                        color: ColorsConstant.darkTextColor, fontSize: 16),
                     labelMedium: TextStyle(
                         color: ColorsConstant.darkTextColor, fontSize: 14),
                     labelSmall: TextStyle(

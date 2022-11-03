@@ -28,23 +28,22 @@ class _SettingModalState extends State<SettingModal> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    String mode = Provider.of<ThemeProvider>(context, listen: false).modeString;
+    String mode = Provider.of<ThemeProvider>(context, listen: false).modeName;
     modeActive = mode;
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 32),
-            decoration: const BoxDecoration(
+            padding: const EdgeInsets.only(bottom: 30),
+            decoration: BoxDecoration(
                 border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromARGB(255, 53, 55, 70)))),
+                    bottom: BorderSide(color: Theme.of(context).dividerColor))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

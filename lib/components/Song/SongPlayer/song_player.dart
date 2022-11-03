@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player_slider.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
 class SongPlayer extends StatefulWidget {
-  final SongModel song;
+  // final SongModel song;
 
-  const SongPlayer({required this.song, super.key});
+  const SongPlayer({super.key});
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -26,16 +26,16 @@ class _SongPlayerState extends State<SongPlayer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var songProvider = Provider.of<SongProvider>(context, listen: false);
-    songProvider.initAudioPLayer(widget.song);
+    var audioProvider = Provider.of<AudioProvider>(context, listen: false);
+    // audioProvider.initAudioPLayer(widget.song);
 
-    durationEvent = songProvider.audioPlayer.durationStream.listen((d) {
+    durationEvent = audioProvider.audioPlayer.durationStream.listen((d) {
       setState(() {
         duration = d!;
       });
     });
 
-    positionEvent = songProvider.audioPlayer.positionStream.listen((p) {
+    positionEvent = audioProvider.audioPlayer.positionStream.listen((p) {
       setState(() {
         position = p;
         turns += 1.0 / 100.0;
@@ -53,7 +53,7 @@ class _SongPlayerState extends State<SongPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    var songProvider = Provider.of<SongProvider>(context);
+    var audioProvider = Provider.of<AudioProvider>(context);
     Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -73,7 +73,7 @@ class _SongPlayerState extends State<SongPlayer> {
                   borderRadius: BorderRadius.circular(size.width)),
               child: Center(
                   child: Text(
-                songProvider.getActiveSong().title,
+                audioProvider.getActiveSong().title,
                 style: TextStyle(fontSize: 30),
               )),
             ),
@@ -103,53 +103,53 @@ class _SongPlayerState extends State<SongPlayer> {
                               : Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: !songProvider.isFirstSong()
+                        onPressed: !audioProvider.isFirstSong()
                             ? () {
-                                songProvider.prevSong();
+                                audioProvider.prevSong();
                               }
                             : null,
                         icon: Icon(
                           Icons.skip_previous,
                           size: 30,
-                          color: !songProvider.isFirstSong()
+                          color: !audioProvider.isFirstSong()
                               ? Theme.of(context).primaryColorDark
                               : Theme.of(context).disabledColor,
                         )),
                     IconButton(
                         onPressed: () {
-                          songProvider.changePlayingState();
+                          audioProvider.changePlayingState();
                         },
                         constraints:
                             const BoxConstraints(minHeight: 114, minWidth: 114),
                         padding: const EdgeInsets.all(24),
                         icon: Icon(
-                          !songProvider.audioPlayer.playing
+                          !audioProvider.audioPlayer.playing
                               ? Icons.play_circle_outline
                               : Icons.pause_circle_outline,
                           size: 70,
                           color: Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: !songProvider.isLastSong()
+                        onPressed: !audioProvider.isLastSong()
                             ? () {
-                                songProvider.nextSong();
+                                audioProvider.nextSong();
                               }
                             : null,
                         icon: Icon(
                           Icons.skip_next,
                           size: 30,
-                          color: !songProvider.isLastSong()
+                          color: !audioProvider.isLastSong()
                               ? Theme.of(context).primaryColorDark
                               : Theme.of(context).disabledColor,
                         )),
                     IconButton(
                         onPressed: () {
-                          songProvider.changeLoopMode();
+                          audioProvider.changeLoopMode();
                         },
                         icon: Icon(
                           Icons.repeat,
                           color:
-                              songProvider.audioPlayer.loopMode == LoopMode.one
+                              audioProvider.audioPlayer.loopMode == LoopMode.one
                                   ? Theme.of(context).primaryColor
                                   : Theme.of(context).primaryColorDark,
                         )),

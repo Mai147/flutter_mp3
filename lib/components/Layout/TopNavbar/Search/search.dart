@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -12,7 +16,20 @@ class _SearchState extends State<Search> {
   String searchValue = "";
   int isOn = 0;
 
+  Timer? _debounce;
+
   TextEditingController searchController = TextEditingController();
+
+  void search(String value) {
+    var songProvider = Provider.of<SongProvider>(context, listen: false);
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        searchValue = value;
+      });
+      songProvider.search(searchValue);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +40,12 @@ class _SearchState extends State<Search> {
         });
       },
       child: SizedBox(
-        height: 38,
+        height: 36,
         child: TextField(
           controller: searchController,
+          autofocus: true,
           onChanged: (value) {
-            setState(() {
-              searchValue = value;
-            });
+            search(value);
           },
           style: Theme.of(context).textTheme.displayMedium,
           decoration: InputDecoration(
@@ -57,6 +73,7 @@ class _SearchState extends State<Search> {
                           searchValue = "";
                           searchController.text = "";
                         });
+                        search(searchValue);
                       },
                       icon: Icon(
                         Icons.close,
@@ -65,7 +82,7 @@ class _SearchState extends State<Search> {
                       ),
                     )
                   : null,
-              fillColor: Theme.of(context).backgroundColor,
+              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
               contentPadding: const EdgeInsets.fromLTRB(0, 0, 20, 0)),
         ),
       ),

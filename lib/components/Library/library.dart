@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Library/LibraryNavbar/library_navbar.dart';
 import 'package:flutter_mp3/components/Library/library_slider_item.dart';
+import 'package:flutter_mp3/components/Library/playlist_item.dart';
+import 'package:flutter_mp3/data/list_playlist.dart';
 
 class Library extends StatelessWidget {
   const Library({super.key});
@@ -90,9 +92,16 @@ class Library extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+        const Padding(
+          padding: EdgeInsets.only(top: 30, left: 20, right: 20),
           child: LibraryNavbar(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+              children: ListPlaylist.list.map((e) {
+            return PlayListItem(playlist: e);
+          }).toList()),
         )
       ],
     );

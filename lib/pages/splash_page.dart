@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 class SpalshPage extends StatefulWidget {
@@ -15,20 +16,20 @@ class _SpalshPageState extends State<SpalshPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var songProvider = Provider.of<SongProvider>(context, listen: false);
+    var audioProvider = Provider.of<AudioProvider>(context, listen: false);
     var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     final window = WidgetsBinding.instance.window;
     window.onPlatformBrightnessChanged = () {
-      if (themeProvider.modeString == "device") {
+      if (themeProvider.modeName == "device") {
         themeProvider.changeByDeviceMode();
       }
     };
 
     Future.delayed(Duration(seconds: 3), () async {
-      // await songProvider.setSource(songProvider.getActiveSong());
-      await songProvider.audioPlayer
-          .setAsset("assets/audio/${songProvider.getActiveSong().url}");
+      // await audioProvider.setSource(audioProvider.getActiveSong());
+      await audioProvider.audioPlayer
+          .setAsset("assets/audio/${audioProvider.getActiveSong().url}");
       if (!mounted) {
         return;
       }
@@ -40,12 +41,18 @@ class _SpalshPageState extends State<SpalshPage> {
   // void dispose() {
   //   // TODO: implement dispose
   //   super.dispose();
-  //   var songProvider = Provider.of<SongProvider>(context, listen: false);
-  //   songProvider.audioPlayer.dispose();
+  //   var audioProvider = Provider.of<AudioProvider>(context, listen: false);
+  //   audioProvider.audioPlayer.dispose();
   // }
 
   @override
   Widget build(BuildContext context) {
-    return Text("Loading");
+    return Scaffold(
+        body: Center(
+      child: LoadingAnimationWidget.discreteCircle(
+        color: Theme.of(context).primaryColor,
+        size: 150,
+      ),
+    ));
   }
 }

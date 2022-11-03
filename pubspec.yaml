@@ -30,12 +30,14 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
     provider:
+    http:
     audioplayers: ^1.1.1
     assets_audio_player: ^3.0.5
     audio_service: ^0.18.7
     just_audio: ^0.9.30
     just_audio_background: ^0.0.1-beta.7
     flutter_swiper: ^1.1.6
+    loading_animation_widget:
     flutter:
         sdk: flutter
 

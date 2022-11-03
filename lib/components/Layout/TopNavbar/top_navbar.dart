@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search.dart';
+import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search_init.dart';
 import 'package:flutter_mp3/pages/setting_page.dart';
 
 class TopNavbar extends StatelessWidget {
@@ -35,7 +36,7 @@ class TopNavbar extends StatelessWidget {
           const Expanded(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Search(),
+            child: SearchInit(),
           )),
           IconButton(
             onPressed: () {

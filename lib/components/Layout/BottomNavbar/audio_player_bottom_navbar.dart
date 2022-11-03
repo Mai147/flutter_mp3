@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
+import 'package:flutter_mp3/pages/song_page.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 
 class AudioPlayerBottomNavbar extends StatefulWidget {
@@ -14,11 +16,15 @@ class AudioPlayerBottomNavbar extends StatefulWidget {
 class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
   @override
   Widget build(BuildContext context) {
-    var songProvider = Provider.of<SongProvider>(context);
+    var audioProvider = Provider.of<AudioProvider>(context);
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/song',
-            arguments: songProvider.getActiveSong());
+        var modal = BottomModal(
+            context: context,
+            child: SongPage(
+              song: audioProvider.getActiveSong(),
+            ));
+        modal.initFullScreenModal();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
@@ -26,7 +32,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
             color: Theme.of(context).bottomAppBarColor,
             border: Border(
                 top: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 3))),
+                    color: Theme.of(context).shadowColor, width: 3))),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +55,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          songProvider.getActiveSong().title,
+                          audioProvider.getActiveSong().title,
                           style: Theme.of(context).textTheme.displaySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -58,7 +64,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                           height: 4,
                         ),
                         Text(
-                          songProvider.getActiveSong().author,
+                          audioProvider.getActiveSong().author,
                           style: Theme.of(context).textTheme.labelSmall,
                         )
                       ],
@@ -79,13 +85,13 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                 ),
                 IconButton(
                   onPressed: () {
-                    songProvider.changePlayingState();
+                    audioProvider.changePlayingState();
                   },
                   constraints:
                       const BoxConstraints(minHeight: 46, minWidth: 44),
                   padding: EdgeInsets.zero,
                   icon: Icon(
-                    songProvider.audioPlayer.playing
+                    audioProvider.audioPlayer.playing
                         ? Icons.pause
                         : Icons.play_arrow_rounded,
                     size: 34,
@@ -94,7 +100,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                 ),
                 IconButton(
                   onPressed: () {
-                    songProvider.nextSong();
+                    audioProvider.nextSong();
                   },
                   padding: EdgeInsets.zero,
                   constraints:
