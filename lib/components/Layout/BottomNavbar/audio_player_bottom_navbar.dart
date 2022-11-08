@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +45,11 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: Colors.red,
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                audioProvider.getActiveSong().image ??
+                                    Default.noImageUrl),
+                            fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(100)),
                   ),
                   const SizedBox(
@@ -55,7 +60,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          audioProvider.getActiveSong().title,
+                          audioProvider.getActiveSong().name!,
                           style: Theme.of(context).textTheme.displaySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -64,7 +69,8 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                           height: 4,
                         ),
                         Text(
-                          audioProvider.getActiveSong().author,
+                          audioProvider.getActiveSong().artist ??
+                              Default.songArtist,
                           style: Theme.of(context).textTheme.labelSmall,
                         )
                       ],

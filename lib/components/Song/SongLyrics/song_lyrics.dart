@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class SongLyrics extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              audioProvider.getActiveSong().lyrics ?? "Bài hát này chưa có lời",
+              audioProvider.getActiveSong().lyrics ?? Default.songLyrics,
               style: TextStyle(
                   color: Theme.of(context).primaryColorDark,
                   fontSize: 22,

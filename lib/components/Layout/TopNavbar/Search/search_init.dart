@@ -16,6 +16,7 @@ class _SearchInitState extends State<SearchInit> {
         onTap: () {
           Navigator.pushNamed(context, '/search');
         },
+        readOnly: true,
         style: Theme.of(context).textTheme.displayMedium,
         decoration: InputDecoration(
             isDense: true,

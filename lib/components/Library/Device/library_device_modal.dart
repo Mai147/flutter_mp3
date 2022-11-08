@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/BottomModal/bottom_modal_item.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 
 class LibraryDeviceModal extends StatelessWidget {
@@ -25,7 +26,10 @@ class LibraryDeviceModal extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(10)),
+                    image: DecorationImage(
+                        image: NetworkImage(song.image ?? Default.noImageUrl),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.circular(10)),
               ),
               const SizedBox(
                 width: 16,
@@ -35,7 +39,7 @@ class LibraryDeviceModal extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      song.title,
+                      song.name!,
                       style: Theme.of(context).textTheme.displayMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -44,7 +48,7 @@ class LibraryDeviceModal extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      song.author,
+                      song.artist ?? Default.songArtist,
                       style: Theme.of(context).textTheme.labelMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

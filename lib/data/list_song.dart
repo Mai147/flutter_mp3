@@ -3,10 +3,10 @@ import 'package:flutter_mp3/models/SongModel.dart';
 class ListSong {
   static final list = [
     SongModel(
-        id: 1,
-        title: "Chưa Quên Người Yêu Cũ (Live Version)",
-        author: "Hà Nhi",
-        url: "ChuaQuenNguoiYeuCuLiveVersion.mp3",
+        id: '1',
+        name: "Chưa Quên Người Yêu Cũ (Live Version)",
+        artist: "Hà Nhi",
+        audio: "ChuaQuenNguoiYeuCuLiveVersion.mp3",
         lyrics: 'Cũng đã gần ba năm\n'
             'Mà em vẫn nhớ anh nhiều lắm\n'
             'Vẫn chưa thể yêu ai\n'
@@ -74,11 +74,34 @@ class ListSong {
             'Và không thể quên\n'
             'Cũng là một cách yêu thương gọi tên\n'),
     SongModel(
-        id: 2, title: "Túy Âm (Cover)", author: "O Sen", url: "TuyAmOSen.mp3"),
+        id: '2',
+        name: "Túy Âm (Cover)",
+        artist: "O Sen",
+        audio: "TuyAmOSen.mp3"),
     SongModel(
-        id: 3,
-        title: "Người Như Anh",
-        author: "Mai Tiến Dũng",
-        url: "NguoiNhuAnh.mp3"),
+        id: '3',
+        name: "Người Như Anh",
+        artist: "Mai Tiến Dũng",
+        audio: "NguoiNhuAnh.mp3"),
+    SongModel(id: '4', name: "Believe Me", audio: "SteinsGateBelieveMe.mp3"),
+    SongModel(
+        id: '5', name: "Believe Me Zero", audio: "SteinsGateBelieveMeZero.mp3"),
+    SongModel(
+        id: '6', name: "Fake Verthandi", audio: "SteinsGateFakeVerthandi.mp3"),
+    SongModel(
+        id: '7', name: "Gate Of Steiner", audio: "SteinsGateGateOfSteiner.mp3"),
+    SongModel(
+        id: '8', name: "Logical Theme", audio: "SteinsGateLogicalTheme.mp3"),
+    SongModel(id: '9', name: "Lyra", audio: "SteinsGateLyra.mp3"),
+    SongModel(id: '10', name: "Messenger", audio: "SteinsGateMessenger.mp3"),
+    SongModel(
+        id: '11',
+        name: "Messenger Main Theme",
+        audio: "SteinsGateMessengerMainTheme.mp3"),
+    SongModel(id: '12', name: "Re Awake", audio: "SteinsGateReawake.mp3"),
+    SongModel(
+        id: '13',
+        name: "The End Of Messenger",
+        audio: "SteinsGateTheEndOfMessenger.mp3"),
   ];
 }

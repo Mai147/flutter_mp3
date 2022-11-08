@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/Modal/error_modal.dart';
 import 'package:flutter_mp3/components/Song/song_item.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +47,7 @@ class SongList extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              audioProvider.getActiveSong().title,
+                              audioProvider.getActiveSong().name!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleMedium,
@@ -54,7 +56,8 @@ class SongList extends StatelessWidget {
                               height: 16,
                             ),
                             Text(
-                              audioProvider.getActiveSong().author,
+                              audioProvider.getActiveSong().artist ??
+                                  Default.songArtist,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleMedium,
@@ -103,7 +106,11 @@ class SongList extends StatelessWidget {
             ),
             Column(
               children: audioProvider.listSong.map((e) {
-                return SongItem(song: e);
+                return SongItem(
+                  song: e,
+                  canClick: false,
+                  canSwipe: true,
+                );
               }).toList(),
             )
           ],

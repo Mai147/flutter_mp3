@@ -27,4 +27,6 @@ class ColorsConstant {
   static const Color lightDisabledColor = Color.fromARGB(255, 150, 150, 150);
   static const Color lightSearchBackgroundColor =
       Color.fromARGB(255, 55, 56, 76);
+  static const Color errorColor = Color.fromARGB(255, 246, 86, 86);
+  static const Color backgroundModalColor = Color.fromARGB(150, 0, 0, 0);
 }

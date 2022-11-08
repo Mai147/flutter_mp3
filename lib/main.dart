@@ -3,6 +3,7 @@ import 'package:flutter_mp3/constants/colors/colors_constant.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:flutter_mp3/provider/modal_provider.dart';
 import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
 import 'package:flutter_mp3/routes/routes.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => ThemeProvider()),
           ChangeNotifierProvider(create: (context) => AudioProvider()),
           ChangeNotifierProvider(create: (context) => SongProvider()),
+          ChangeNotifierProvider(create: (context) => ModalProvider()),
         ],
         child: Consumer<ThemeProvider>(
           builder: (context, themeObj, _) => GestureDetector(

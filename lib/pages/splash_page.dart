@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -28,8 +29,10 @@ class _SpalshPageState extends State<SpalshPage> {
 
     Future.delayed(Duration(seconds: 3), () async {
       // await audioProvider.setSource(audioProvider.getActiveSong());
-      await audioProvider.audioPlayer
-          .setAsset("assets/audio/${audioProvider.getActiveSong().url}");
+      // await audioProvider.audioPlayer
+      //     .setAsset("assets/audio/${audioProvider.getActiveSong().audio}");
+      await audioProvider.audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(
+          "asset:///assets/audio/${audioProvider.getActiveSong().audio}")));
       if (!mounted) {
         return;
       }

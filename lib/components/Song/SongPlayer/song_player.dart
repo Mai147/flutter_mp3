@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player_slider.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:just_audio/just_audio.dart';
@@ -17,7 +18,6 @@ class SongPlayer extends StatefulWidget {
 class _SongPlayerState extends State<SongPlayer> {
   Duration duration = Duration();
   Duration position = Duration();
-  bool isRandom = false;
   double turns = 0.0;
   var durationEvent;
   var positionEvent;
@@ -27,7 +27,6 @@ class _SongPlayerState extends State<SongPlayer> {
     // TODO: implement initState
     super.initState();
     var audioProvider = Provider.of<AudioProvider>(context, listen: false);
-    // audioProvider.initAudioPLayer(widget.song);
 
     durationEvent = audioProvider.audioPlayer.durationStream.listen((d) {
       setState(() {
@@ -69,13 +68,11 @@ class _SongPlayerState extends State<SongPlayer> {
               width: size.width - 80,
               height: size.width - 80,
               decoration: BoxDecoration(
-                  color: Colors.red,
+                  image: DecorationImage(
+                      image: NetworkImage(audioProvider.getActiveSong().image ??
+                          Default.noImageUrl),
+                      fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(size.width)),
-              child: Center(
-                  child: Text(
-                audioProvider.getActiveSong().title,
-                style: TextStyle(fontSize: 30),
-              )),
             ),
           ),
           const SizedBox(
@@ -94,16 +91,20 @@ class _SongPlayerState extends State<SongPlayer> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          audioProvider.changeShuffle();
+                        },
                         padding: EdgeInsets.zero,
                         icon: Icon(
                           Icons.shuffle,
-                          color: isRandom
+                          color: audioProvider.isShuffle
                               ? Theme.of(context).primaryColor
                               : Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: !audioProvider.isFirstSong()
+                        onPressed: audioProvider.audioPlayer.loopMode ==
+                                    LoopMode.all ||
+                                !audioProvider.isFirstSong()
                             ? () {
                                 audioProvider.prevSong();
                               }
@@ -111,7 +112,9 @@ class _SongPlayerState extends State<SongPlayer> {
                         icon: Icon(
                           Icons.skip_previous,
                           size: 30,
-                          color: !audioProvider.isFirstSong()
+                          color: audioProvider.audioPlayer.loopMode ==
+                                      LoopMode.all ||
+                                  !audioProvider.isFirstSong()
                               ? Theme.of(context).primaryColorDark
                               : Theme.of(context).disabledColor,
                         )),
@@ -130,7 +133,9 @@ class _SongPlayerState extends State<SongPlayer> {
                           color: Theme.of(context).primaryColorDark,
                         )),
                     IconButton(
-                        onPressed: !audioProvider.isLastSong()
+                        onPressed: audioProvider.audioPlayer.loopMode ==
+                                    LoopMode.all ||
+                                !audioProvider.isLastSong()
                             ? () {
                                 audioProvider.nextSong();
                               }
@@ -138,7 +143,9 @@ class _SongPlayerState extends State<SongPlayer> {
                         icon: Icon(
                           Icons.skip_next,
                           size: 30,
-                          color: !audioProvider.isLastSong()
+                          color: audioProvider.audioPlayer.loopMode ==
+                                      LoopMode.all ||
+                                  !audioProvider.isLastSong()
                               ? Theme.of(context).primaryColorDark
                               : Theme.of(context).disabledColor,
                         )),
@@ -147,11 +154,13 @@ class _SongPlayerState extends State<SongPlayer> {
                           audioProvider.changeLoopMode();
                         },
                         icon: Icon(
-                          Icons.repeat,
+                          audioProvider.audioPlayer.loopMode == LoopMode.one
+                              ? Icons.repeat_one_rounded
+                              : Icons.repeat_rounded,
                           color:
-                              audioProvider.audioPlayer.loopMode == LoopMode.one
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context).primaryColorDark,
+                              audioProvider.audioPlayer.loopMode == LoopMode.off
+                                  ? Theme.of(context).primaryColorDark
+                                  : Theme.of(context).primaryColor,
                         )),
                   ],
                 )

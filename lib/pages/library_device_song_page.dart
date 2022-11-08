@@ -3,12 +3,15 @@ import 'package:flutter_mp3/components/Layout/layout.dart';
 import 'package:flutter_mp3/components/Library/Device/library_device_item.dart';
 import 'package:flutter_mp3/data/list_song.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
+import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:provider/provider.dart';
 
 class LibraryDeviceSongPage extends StatelessWidget {
   const LibraryDeviceSongPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var audioProvider = Provider.of<AudioProvider>(context);
     return Layout(
         hasTopNav: false,
         hasAppBar: true,
@@ -20,7 +23,11 @@ class LibraryDeviceSongPage extends StatelessWidget {
               children: [
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      audioProvider.updateList(ListSong.list);
+                      var song = audioProvider.shuffleList();
+                      audioProvider.initAudioPLayer(song);
+                    },
                     style: ElevatedButton.styleFrom(
                         padding:
                             EdgeInsets.symmetric(horizontal: 42, vertical: 12),

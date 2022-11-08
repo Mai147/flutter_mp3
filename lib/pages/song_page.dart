@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/Modal/error_modal.dart';
 import 'package:flutter_mp3/components/Song/SongList/song_list.dart';
 import 'package:flutter_mp3/components/Song/SongLyrics/song_lyrics.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -46,12 +48,12 @@ class _SongPageState extends State<SongPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  audioProvider.getActiveSong().title,
+                  audioProvider.getActiveSong().name!,
                   style: Theme.of(context).textTheme.titleMedium,
                   maxLines: 1,
                 ),
                 Text(
-                  audioProvider.getActiveSong().author,
+                  audioProvider.getActiveSong().artist ?? Default.songArtist,
                   style: Theme.of(context).textTheme.labelMedium,
                   maxLines: 1,
                 )
@@ -66,23 +68,26 @@ class _SongPageState extends State<SongPage> {
               )
             ],
           ),
-          body: Swiper(
-            itemCount: 3,
-            pagination: SwiperPagination(
-                alignment: Alignment.topCenter,
-                builder: DotSwiperPaginationBuilder(
-                    color: Theme.of(context).primaryColorDark,
-                    activeColor: Theme.of(context).primaryColor,
-                    size: 6,
-                    activeSize: 6)),
-            itemBuilder: ((context, index) {
-              return index == 0
-                  ? const SongPlayer()
-                  : index == 1
-                      ? const SongLyrics()
-                      : const SongList();
-            }),
-          )),
+          body: Stack(children: [
+            Swiper(
+              itemCount: 3,
+              pagination: SwiperPagination(
+                  alignment: Alignment.topCenter,
+                  builder: DotSwiperPaginationBuilder(
+                      color: Theme.of(context).primaryColorDark,
+                      activeColor: Theme.of(context).primaryColor,
+                      size: 6,
+                      activeSize: 6)),
+              itemBuilder: ((context, index) {
+                return index == 0
+                    ? const SongPlayer()
+                    : index == 1
+                        ? const SongLyrics()
+                        : const SongList();
+              }),
+            ),
+            const ErrorModal()
+          ])),
     );
   }
 }
