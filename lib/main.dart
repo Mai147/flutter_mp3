@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/constants/colors/colors_constant.dart';
-import 'package:flutter_mp3/models/SongModel.dart';
-import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_mp3/provider/modal_provider.dart';
 import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_mp3/provider/theme_provider.dart';
 import 'package:flutter_mp3/routes/routes.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.example.flutter_mp3.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

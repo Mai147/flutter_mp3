@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/data/list_song.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 class AudioProvider extends ChangeNotifier {
   AudioPlayer audioPlayer = AudioPlayer();
@@ -44,53 +46,23 @@ class AudioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future setAssetSource(SongModel song) async {
-    try {
-      activeId = song.id!;
-      // await audioPlayer.setAudioSource(AudioSource.uri(
-      //   Uri.file("file:///android_asset/audio/${song.url}"),
-      //   tag: MediaItem(
-      //     id: "${song.id}",
-      //     album: "Album name",
-      //     title: "${song.title}",
-      //     artUri: Uri.parse('https://example.com/albumart.jpg'),
-      //   ),
-      // ));
-      // await audioPlayer.setAsset("assets/audio/${song.audio}");
-      await audioPlayer.setAudioSource(
-          AudioSource.uri(Uri.parse("asset:///assets/audio/${song.audio}")));
-      if (!audioPlayer.playing) {
-        changePlayingState();
-      }
-    } on Exception {
-      log("Error parsing song");
-    }
-  }
-
-  Future setNetworkSource(SongModel song) async {
-    try {
-      activeId = song.id!;
-      if (audioPlayer.playing) {
-        changePlayingState();
-      }
-      String apiUrl =
-          "https://zing-mp3-api.onrender.com/api/v1/file/${song.audio}";
-      await audioPlayer.setAudioSource(AudioSource.uri(
-        Uri.parse(apiUrl),
-      ));
-      if (!audioPlayer.playing) {
-        changePlayingState();
-      }
-    } on Exception {
-      log("Error parsing song");
-    }
-  }
-
   Future setSource(SongModel song) async {
+    String uri;
     if (song.isNetworkSource == true) {
-      await setNetworkSource(song);
+      uri = "https://zing-mp3-api.onrender.com/api/v1/file/${song.audio}";
     } else {
-      await setAssetSource(song);
+      uri = "asset:///assets/audio/${song.audio}";
+    }
+    try {
+      activeId = song.id!;
+      await audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri),
+          tag:
+              MediaItem(id: song.id!, title: song.name!, artist: song.artist)));
+      if (!audioPlayer.playing) {
+        await audioPlayer.play();
+      }
+    } on Exception {
+      log("Error parsing song");
     }
   }
 
@@ -125,20 +97,9 @@ class AudioProvider extends ChangeNotifier {
 
   void changeLoopMode() {
     LoopMode currentLoop = audioPlayer.loopMode;
-    switch (currentLoop) {
-      case LoopMode.off:
-        // TODO: Handle this case.
-        audioPlayer.setLoopMode(LoopMode.one);
-        break;
-      case LoopMode.one:
-        // TODO: Handle this case.
-        audioPlayer.setLoopMode(LoopMode.all);
-        break;
-      case LoopMode.all:
-        // TODO: Handle this case.
-        audioPlayer.setLoopMode(LoopMode.off);
-        break;
-    }
+    var loopArray = [LoopMode.off, LoopMode.one, LoopMode.all];
+    var index = loopArray.indexOf(currentLoop);
+    audioPlayer.setLoopMode(loopArray[(index + 1) % loopArray.length]);
     notifyListeners();
   }
 
