@@ -1,94 +1,155 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/data/list_song.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:http/http.dart' as http;
 
 class AudioProvider extends ChangeNotifier {
   AudioPlayer audioPlayer = AudioPlayer();
   List<SongModel> listSong = [ListSong.list[0]];
   List<SongModel> listUnShuffle = [ListSong.list[0]];
-  String activeId = ListSong.list[0].id!;
+  ConcatenatingAudioSource playList = ConcatenatingAudioSource(children: [
+    AudioSource.uri(
+        Uri.parse("asset:///assets/audio/${ListSong.list[0].audio}"),
+        tag: MediaItem(
+            id: ListSong.list[0].id!,
+            title: ListSong.list[0].name!,
+            artist: ListSong.list[0].artist,
+            artUri: Uri.parse(Default.noImageUrl)))
+  ]);
   bool isShuffle = false;
+  bool isLoading = false;
 
-  void updateList(List<SongModel> list) {
-    listSong = List.from(list);
+  void loading() {
+    isLoading = true;
     notifyListeners();
   }
 
-  SongModel shuffleList() {
-    listUnShuffle = List.from(listSong);
-    listSong.shuffle();
-    isShuffle = true;
-    notifyListeners();
-    return listSong[0];
-  }
-
-  SongModel unShuffleList() {
-    listSong = List.from(listUnShuffle);
-    isShuffle = false;
-    notifyListeners();
-    return listSong[0];
-  }
-
-  void changeShuffle() {
-    isShuffle = !isShuffle;
-    if (isShuffle) {
-      var song = shuffleList();
-      initAudioPLayer(song);
-    } else {
-      var song = unShuffleList();
-      initAudioPLayer(song);
-    }
+  void finishLoading() {
+    isLoading = false;
     notifyListeners();
   }
 
-  Future setSource(SongModel song) async {
+  AudioSource toAudioSource(SongModel song) {
     String uri;
     if (song.isNetworkSource == true) {
       uri = "https://zing-mp3-api.onrender.com/api/v1/file/${song.audio}";
     } else {
       uri = "asset:///assets/audio/${song.audio}";
     }
-    try {
-      activeId = song.id!;
-      await audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri),
-          tag:
-              MediaItem(id: song.id!, title: song.name!, artist: song.artist)));
-      if (!audioPlayer.playing) {
-        await audioPlayer.play();
-      }
-    } on Exception {
-      log("Error parsing song");
+    return AudioSource.uri(Uri.parse(uri),
+        tag: MediaItem(
+            id: song.id!,
+            title: song.name!,
+            artist: song.artist,
+            artUri: Uri.parse(song.image ?? Default.noImageUrl)));
+  }
+
+  Future addItem(SongModel song) async {
+    if (listSong.where((element) => element.id == song.id).toList().isEmpty) {
+      listSong.add(song);
+      await playList.add(toAudioSource(song));
     }
   }
 
-  void initAudioPLayer(SongModel song) async {
-    if (getActiveSong().id == song.id) {
-      return;
+  Future playSpecificItem(SongModel song) async {
+    loading();
+    if (song.isNetworkSource == true) {
+      String apiUrl =
+          "https://zing-mp3-api.onrender.com/api/v1/song/${song.id}";
+      var client = http.Client();
+      await client.get(Uri.parse(apiUrl));
     }
-
     if (listSong.where((element) => element.id == song.id).toList().isEmpty) {
-      listSong.add(song);
+      await addItem(song);
+      await audioPlayer.seekToNext();
+    } else {
+      var nextIndex = listSong.indexOf(song);
+      await audioPlayer.seek(Duration.zero, index: nextIndex);
     }
+    finishLoading();
+    if (!audioPlayer.playing) {
+      await audioPlayer.play();
+    }
+  }
 
-    await setSource(song);
+  Future updateAudioService() async {
+    loading();
+    playList = ConcatenatingAudioSource(
+        children: listSong.map((song) {
+      return toAudioSource(song);
+    }).toList());
+    await audioPlayer.setAudioSource(playList);
+    var song = getActiveSong();
+    if (song.isNetworkSource == true) {
+      String apiUrl =
+          "https://zing-mp3-api.onrender.com/api/v1/song/${song.id}";
+      var client = http.Client();
+      await client.get(Uri.parse(apiUrl));
+    }
+    finishLoading();
+  }
+
+  void updateList(List<SongModel> list) {
+    listSong = List.from(list);
     notifyListeners();
   }
 
-  SongModel getActiveSong() {
-    var song = listSong.where((song) => song.id == activeId).toList()[0];
-    return song;
+  Future shuffleList() async {
+    listUnShuffle = List.from(listSong);
+    isShuffle = true;
+    if (listSong.length == 1) {
+      return;
+    }
+    while (listSong[0] == listUnShuffle[0]) {
+      listSong.shuffle();
+    }
+    await updateAudioService();
   }
 
-  void changePlayingState() {
-    if (audioPlayer.duration!.inSeconds.toDouble() <=
+  Future unShuffleList() async {
+    listSong = List.from(listUnShuffle);
+    isShuffle = false;
+    if (listSong.length == 1) {
+      return;
+    }
+    await updateAudioService();
+    notifyListeners();
+  }
+
+  void changeShuffle() async {
+    isShuffle = !isShuffle;
+    if (isShuffle) {
+      await shuffleList();
+    } else {
+      await unShuffleList();
+    }
+    // notifyListeners();
+  }
+
+  Future initPage() async {
+    await audioPlayer.setAudioSource(playList);
+    notifyListeners();
+  }
+
+  Future initAudioPLayer(SongModel song) async {
+    var currentMediaItem = getCurrentMediaItem();
+    if (currentMediaItem.id == song.id) {
+      return;
+    }
+
+    await playSpecificItem(song);
+    notifyListeners();
+  }
+
+  void changePlayingState() async {
+    if ((audioPlayer.duration?.inSeconds.toDouble() ??
+                audioPlayer.position.inSeconds.toDouble() + 1) <=
             audioPlayer.position.inSeconds.toDouble() &&
         !audioPlayer.playing) {
-      audioPlayer.seek(const Duration(microseconds: 0));
+      await audioPlayer.seek(const Duration(microseconds: 0));
     }
     audioPlayer.playing ? audioPlayer.pause() : audioPlayer.play();
 
@@ -103,45 +164,83 @@ class AudioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void nextSong() async {
-    int index = listSong.indexOf(getActiveSong());
+  Future nextSong() async {
+    var index = playList.children.indexOf(getCurrentSource()!);
     if (index == listSong.length - 1) {
       index = 0;
     } else {
       index++;
     }
-    await setSource(listSong[index]);
+    await playSpecificItem(listSong[index]);
     notifyListeners();
   }
 
-  void prevSong() async {
-    int index = listSong.indexOf(getActiveSong());
+  Future prevSong() async {
+    var index = playList.children.indexOf(getCurrentSource()!);
     if (index == 0) {
       index = listSong.length - 1;
     } else {
       index--;
     }
-    await setSource(listSong[index]);
+    await playSpecificItem(listSong[index]);
     notifyListeners();
   }
 
+  IndexedAudioSource? getCurrentSource() {
+    var source = audioPlayer.sequenceState!.currentSource;
+    return source;
+  }
+
+  MediaItem getCurrentMediaItem() {
+    var metadata = audioPlayer.sequenceState!.currentSource!.tag as MediaItem;
+    return metadata;
+  }
+
+  SongModel getActiveSong() {
+    var currentSource = getCurrentMediaItem();
+    var song =
+        listSong.where((song) => song.id == currentSource.id).toList()[0];
+    return song;
+  }
+
   bool isFirstSong() {
-    int index = listSong.indexOf(getActiveSong());
+    var currentSource = getCurrentSource();
+    var index = playList.children.indexOf(currentSource!);
     return index == 0;
   }
 
   bool isLastSong() {
-    int index = listSong.indexOf(getActiveSong());
-    return index == listSong.length - 1;
+    var currentSource = getCurrentSource();
+    var index = playList.children.indexOf(currentSource!);
+    return index == playList.length - 1;
   }
 
   bool removeSong(SongModel song) {
-    if (song.id != activeId) {
-      listSong.removeWhere((element) => element.id == song.id);
+    var currentMediaItem = getCurrentMediaItem();
+    if (currentMediaItem.id != song.id) {
+      var index = listSong.indexWhere((element) => element.id == song.id);
+      listSong.removeAt(index);
+      playList.removeAt(index);
+      listUnShuffle.removeWhere((element) => element.id == song.id);
       notifyListeners();
       return true;
     }
     notifyListeners();
     return false;
+  }
+
+  void removeAll() {
+    var currentMediaItem = getCurrentMediaItem();
+    var index =
+        listSong.indexWhere((element) => element.id == currentMediaItem.id);
+    listSong.removeWhere((element) => element.id != currentMediaItem.id);
+    listUnShuffle.removeWhere((element) => element.id != currentMediaItem.id);
+    playList.removeRange(0, index);
+    playList.removeRange(1, playList.length);
+    // var index = listSong.indexWhere((element) => element.id == song.id);
+    // listSong.removeAt(index);
+    // playList.removeAt(index);
+    // listUnShuffle.removeWhere((element) => element.id == song.id);
+    notifyListeners();
   }
 }

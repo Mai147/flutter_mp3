@@ -56,7 +56,7 @@ class ErrorModal extends StatelessWidget {
                         modalProvider.closeModal();
                       },
                       child: Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         width: size.width * 3.4,
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(

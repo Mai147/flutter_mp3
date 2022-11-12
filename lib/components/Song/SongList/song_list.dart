@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/components/Modal/error_modal.dart';
 import 'package:flutter_mp3/components/Song/song_item.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:flutter_mp3/utils/format.dart';
 import 'package:provider/provider.dart';
 
 class SongList extends StatelessWidget {
@@ -23,50 +23,51 @@ class SongList extends StatelessWidget {
                   color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                  child: Row(
-                    children: [
-                      Column(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Bài hát",
+                            style: Theme.of(context).textTheme.labelLarge),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Text("Nghệ sĩ",
+                            style: Theme.of(context).textTheme.labelLarge),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Bài hát",
-                              style: Theme.of(context).textTheme.labelLarge),
+                          Text(
+                            audioProvider.getActiveSong().name!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                           const SizedBox(
                             height: 16,
                           ),
-                          Text("Nghệ sĩ",
-                              style: Theme.of(context).textTheme.labelLarge),
+                          Text(
+                            audioProvider.getActiveSong().artist ??
+                                Default.songArtist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
                         ],
                       ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              audioProvider.getActiveSong().name!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            Text(
-                              audioProvider.getActiveSong().artist ??
-                                  Default.songArtist,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
+                    )
+                  ],
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -79,7 +80,8 @@ class SongList extends StatelessWidget {
                       SizedBox(
                         width: 6,
                       ),
-                      Text("963,2K")
+                      Text(Format.formatNumber(
+                          audioProvider.getActiveSong().like ?? 0))
                     ],
                   ),
                   Row(
@@ -88,7 +90,8 @@ class SongList extends StatelessWidget {
                       SizedBox(
                         width: 6,
                       ),
-                      Text("38M")
+                      Text(Format.formatNumber(
+                          audioProvider.getActiveSong().views ?? 0))
                     ],
                   )
                 ],
@@ -97,9 +100,23 @@ class SongList extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Text(
-              "Danh sách phát",
-              style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Danh sách phát",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                IconButton(
+                  onPressed: () {
+                    audioProvider.removeAll();
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  color: Theme.of(context).primaryColorDark,
+                  icon: const Icon(Icons.playlist_remove_outlined),
+                )
+              ],
             ),
             const SizedBox(
               height: 16,
@@ -108,8 +125,8 @@ class SongList extends StatelessWidget {
               children: audioProvider.listSong.map((e) {
                 return SongItem(
                   song: e,
-                  canClick: false,
                   canSwipe: true,
+                  canOpenModal: false,
                 );
               }).toList(),
             )

@@ -13,10 +13,12 @@ class SongItem extends StatelessWidget {
   final SongModel song;
   final bool canClick;
   final bool canSwipe;
+  final bool canOpenModal;
   const SongItem(
       {required this.song,
       this.canClick = true,
       this.canSwipe = false,
+      this.canOpenModal = true,
       super.key});
 
   @override
@@ -30,12 +32,6 @@ class SongItem extends StatelessWidget {
                 endActionPane: ActionPane(
                   // A motion is a widget used to control how the pane animates.
                   motion: const ScrollMotion(),
-
-                  // A pane can dismiss the Slidable.
-                  // dismissible: DismissiblePane(onDismissed: () {
-                  //   audioProvider.removeSong(song);
-                  // }),
-
                   // All actions are defined in the children parameter.
                   children: [
                     // A SlidableAction can have an icon and/or a label.
@@ -66,14 +62,19 @@ class SongItem extends StatelessWidget {
   }
 
   buildItem(BuildContext context) {
+    var audioProvider = Provider.of<AudioProvider>(context);
     return InkWell(
-      onTap: canClick
+      onTap: (canClick && canOpenModal)
           ? () {
               var modal =
                   BottomModal(context: context, child: SongPage(song: song));
               modal.initFullScreenModal();
             }
-          : null,
+          : (canClick)
+              ? () async {
+                  await audioProvider.initAudioPLayer(song);
+                }
+              : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

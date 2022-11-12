@@ -5,7 +5,7 @@ class SongModel {
   String? audio;
   String? artist;
   int? like;
-  int? view;
+  int? views;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? country;
@@ -22,7 +22,7 @@ class SongModel {
       this.audio,
       this.artist,
       this.like,
-      this.view,
+      this.views,
       this.createdAt,
       this.updatedAt,
       this.country,
@@ -40,7 +40,7 @@ class SongModel {
         audio: obj['audio'],
         artist: obj['artistId'],
         like: obj['like'],
-        view: obj['view'],
+        views: obj['views'],
         createdAt: DateTime.parse(obj['createdAt']),
         updatedAt: DateTime.parse(obj['updatedAt']),
         country: obj['country'],

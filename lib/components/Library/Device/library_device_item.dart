@@ -79,7 +79,7 @@ class LibraryDeviceItem extends StatelessWidget {
                     ));
                 modal.initModal();
               },
-              icon: Icon(Icons.more_vert),
+              icon: const Icon(Icons.more_vert),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             )

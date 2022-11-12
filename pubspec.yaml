@@ -36,6 +36,7 @@ dependencies:
     audio_service: ^0.18.7
     just_audio: ^0.9.30
     just_audio_background: ^0.0.1-beta.7
+    rxdart: ^0.27.5
     flutter_swiper: ^1.1.6
     liquid_swipe: ^3.0.0
     flutter_slidable: ^2.0.0

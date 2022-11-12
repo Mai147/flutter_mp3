@@ -13,7 +13,7 @@ class Loading extends StatelessWidget {
         child: condition
             ? Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 3 / 4,
+                height: MediaQuery.of(context).size.height,
                 color: ColorsConstant.backgroundModalColor,
                 child: Center(
                     child: LoadingAnimationWidget.discreteCircle(

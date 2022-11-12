@@ -7,6 +7,7 @@ class ListSong {
         name: "Chưa Quên Người Yêu Cũ (Live Version)",
         artist: "Hà Nhi",
         audio: "ChuaQuenNguoiYeuCuLiveVersion.mp3",
+        like: 1234,
         lyrics: 'Cũng đã gần ba năm\n'
             'Mà em vẫn nhớ anh nhiều lắm\n'
             'Vẫn chưa thể yêu ai\n'
@@ -77,7 +78,8 @@ class ListSong {
         id: '2',
         name: "Túy Âm (Cover)",
         artist: "O Sen",
-        audio: "TuyAmOSen.mp3"),
+        audio: "TuyAmOSen.mp3",
+        views: 12345678901),
     SongModel(
         id: '3',
         name: "Người Như Anh",

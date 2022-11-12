@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
 import 'package:flutter_mp3/components/Layout/layout.dart';
 import 'package:flutter_mp3/components/Library/Device/library_device_item.dart';
 import 'package:flutter_mp3/data/list_song.dart';
-import 'package:flutter_mp3/models/SongModel.dart';
+import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,19 +19,25 @@ class LibraryDeviceSongPage extends StatelessWidget {
         appBarTitle: "Trên thiết bị (${ListSong.list.length})",
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             child: Column(
               children: [
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       audioProvider.updateList(ListSong.list);
-                      var song = audioProvider.shuffleList();
-                      audioProvider.initAudioPLayer(song);
+                      await audioProvider.shuffleList();
+                      var song = audioProvider.getActiveSong();
+                      var bottomModal = BottomModal(
+                          context: context,
+                          child: SongPage(
+                            song: song,
+                          ));
+                      bottomModal.initFullScreenModal();
                     },
                     style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 42, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 42, vertical: 12),
                         backgroundColor: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40))),

@@ -23,7 +23,7 @@ class SettingModalItem extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.displayMedium,
             ),
-            isActive ? Icon(Icons.check) : Container()
+            isActive ? const Icon(Icons.check) : Container()
           ],
         ),
       ),

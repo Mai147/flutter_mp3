@@ -21,16 +21,14 @@ class _AudioState extends State<Audio> {
     var audioProvider = Provider.of<AudioProvider>(context, listen: false);
 
     positionEvent = audioProvider.audioPlayer.positionStream.listen((p) {
-      if (p >= audioProvider.audioPlayer.duration! &&
+      if ((p >=
+              (audioProvider.audioPlayer.duration ??
+                  p + Duration(seconds: 1))) &&
           audioProvider.audioPlayer.playing) {
         if (audioProvider.audioPlayer.loopMode == LoopMode.off) {
           if (audioProvider.isLastSong()) {
             audioProvider.changePlayingState();
-          } else {
-            audioProvider.nextSong();
           }
-        } else if (audioProvider.audioPlayer.loopMode == LoopMode.all) {
-          audioProvider.nextSong();
         }
       }
     });

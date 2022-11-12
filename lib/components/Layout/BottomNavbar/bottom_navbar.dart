@@ -10,7 +10,7 @@ class BottomNavbar extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AudioPlayerBottomNavbar(),
+        const AudioPlayerBottomNavbar(),
         Container(
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(

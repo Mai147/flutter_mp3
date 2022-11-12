@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Modal/error_modal.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
 
 class SongPage extends StatefulWidget {
@@ -24,13 +28,18 @@ class _SongPageState extends State<SongPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var audioProvider = Provider.of<AudioProvider>(context, listen: false);
-    audioProvider.initAudioPLayer(widget.song);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AudioProvider>(context, listen: false)
+          .initAudioPLayer(widget.song);
+    });
+    // var audioProvider = Provider.of<AudioProvider>(context, listen: false);
+    // audioProvider.initAudioPLayer(widget.song);
   }
 
   @override
   Widget build(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var size = MediaQuery.of(context).size;
     return SafeArea(
       minimum: const EdgeInsets.only(top: 16),
       child: Scaffold(
@@ -44,20 +53,30 @@ class _SongPageState extends State<SongPage> {
                 color: Theme.of(context).primaryColorDark,
               ),
             ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  audioProvider.getActiveSong().name!,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  maxLines: 1,
-                ),
-                Text(
-                  audioProvider.getActiveSong().artist ?? Default.songArtist,
-                  style: Theme.of(context).textTheme.labelMedium,
-                  maxLines: 1,
-                )
-              ],
+            title: StreamBuilder<SequenceState?>(
+              stream: audioProvider.audioPlayer.sequenceStateStream,
+              builder: ((context, snapshot) {
+                final state = snapshot.data;
+                if (state?.sequence.isEmpty ?? true) {
+                  return const SizedBox();
+                }
+                final metadata = state!.currentSource!.tag as MediaItem;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      metadata.title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                    ),
+                    Text(
+                      metadata.artist ?? Default.songArtist,
+                      style: Theme.of(context).textTheme.labelMedium,
+                      maxLines: 1,
+                    )
+                  ],
+                );
+              }),
             ),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             shadowColor: Colors.transparent,
@@ -69,6 +88,37 @@ class _SongPageState extends State<SongPage> {
             ],
           ),
           body: Stack(children: [
+            SizedBox(
+              height: size.height,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  StreamBuilder<SequenceState?>(
+                      stream: audioProvider.audioPlayer.sequenceStateStream,
+                      builder: (context, snapshot) {
+                        final state = snapshot.data;
+                        if (state?.sequence.isEmpty ?? true) {
+                          return const SizedBox();
+                        }
+                        final metadata = state!.currentSource!.tag as MediaItem;
+                        return Image.network(metadata.artUri.toString(),
+                            fit: BoxFit.cover);
+                      }),
+                  ClipRRect(
+                    // Clip it cleanly.
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                      child: Container(
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withOpacity(0.8),
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Swiper(
               itemCount: 3,
               pagination: SwiperPagination(
@@ -86,7 +136,7 @@ class _SongPageState extends State<SongPage> {
                         : const SongList();
               }),
             ),
-            const ErrorModal()
+            const ErrorModal(),
           ])),
     );
   }
