@@ -1,14 +1,18 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
 import 'package:flutter_mp3/components/Modal/error_modal.dart';
 import 'package:flutter_mp3/components/Song/SongList/song_list.dart';
 import 'package:flutter_mp3/components/Song/SongLyrics/song_lyrics.dart';
 import 'package:flutter_mp3/components/Song/SongPlayer/song_player.dart';
+import 'package:flutter_mp3/components/Song/song_modal.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -32,13 +36,12 @@ class _SongPageState extends State<SongPage> {
       Provider.of<AudioProvider>(context, listen: false)
           .initAudioPLayer(widget.song);
     });
-    // var audioProvider = Provider.of<AudioProvider>(context, listen: false);
-    // audioProvider.initAudioPLayer(widget.song);
   }
 
   @override
   Widget build(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var songProvider = Provider.of<SongProvider>(context);
     var size = MediaQuery.of(context).size;
     return SafeArea(
       minimum: const EdgeInsets.only(top: 16),
@@ -82,7 +85,14 @@ class _SongPageState extends State<SongPage> {
             shadowColor: Colors.transparent,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  var bottomModal = BottomModal(
+                      context: context,
+                      child: SongModal(
+                        song: audioProvider.getActiveSong(),
+                      ));
+                  bottomModal.initModal();
+                },
                 icon: Icon(Icons.more_vert),
               )
             ],
@@ -100,9 +110,9 @@ class _SongPageState extends State<SongPage> {
                         if (state?.sequence.isEmpty ?? true) {
                           return const SizedBox();
                         }
-                        final metadata = state!.currentSource!.tag as MediaItem;
-                        return Image.network(metadata.artUri.toString(),
-                            fit: BoxFit.cover);
+                        return songProvider.getImage(
+                            audioProvider.getActiveSong(),
+                            type: 1) as Image;
                       }),
                   ClipRRect(
                     // Clip it cleanly.

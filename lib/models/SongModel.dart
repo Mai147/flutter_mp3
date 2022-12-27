@@ -1,3 +1,6 @@
+import 'package:flutter_mp3/constants/songs/song_type.dart';
+import 'package:on_audio_query/on_audio_query.dart' as auq;
+
 class SongModel {
   String? id;
   String? name;
@@ -13,7 +16,7 @@ class SongModel {
   List<String>? listAlbum;
   List<String>? listType;
   String? lyrics;
-  bool? isNetworkSource;
+  int? type; // 0: asset; 1: network; 2: file
 
   SongModel(
       {this.id,
@@ -30,7 +33,7 @@ class SongModel {
       this.listAlbum,
       this.listType,
       this.lyrics,
-      this.isNetworkSource = false});
+      this.type = SongType.assetType});
 
   factory SongModel.fromJson(Map<String, dynamic> obj) {
     return SongModel(
@@ -48,6 +51,51 @@ class SongModel {
         listAlbum: obj['listAlbumIds'],
         listType: obj['listType'],
         lyrics: obj['lyrics'],
-        isNetworkSource: true);
+        type: SongType.networkType);
+  }
+
+  factory SongModel.fromDevice(Map<String, dynamic> obj) {
+    return SongModel(
+        id: obj['id'],
+        name: obj['name'],
+        image: obj['image'],
+        audio: obj['audio'],
+        artist: obj['artist'],
+        like: obj['like'],
+        views: obj['views'],
+        country: obj['country'],
+        originAlbum: obj['originAlbum'],
+        lyrics: obj['lyrics'],
+        type: SongType.fileType);
+  }
+
+  factory SongModel.fromOnAudioQuery(auq.SongModel song) {
+    return SongModel(
+        id: song.id.toString(),
+        name: song.displayNameWOExt,
+        // image: song.uri,
+        audio: song.uri,
+        artist: song.artist,
+        type: SongType.fileType);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "image": image,
+      "audio": audio,
+      "artist": artist,
+      "like": like,
+      "views": views,
+      "createdAt": createdAt.toString(),
+      "updatedAt": updatedAt.toString(),
+      "country": country,
+      "originAlbum": originAlbum,
+      "listAlbum": listAlbum.toString(),
+      "listType": listType.toString(),
+      "lyrics": lyrics,
+      "type": type
+    };
   }
 }

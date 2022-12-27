@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/PlaylistModel.dart';
 
 class PlayListItem extends StatelessWidget {
@@ -16,7 +17,10 @@ class PlayListItem extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                  color: Colors.red, borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
+                      image: NetworkImage(Default.noImageUrl),
+                      fit: BoxFit.cover)),
             ),
             const SizedBox(
               width: 16,

@@ -46,15 +46,19 @@ class Layout extends StatelessWidget {
         body: SafeArea(
           child: Stack(children: [
             !isSearchPage
-                ? SingleChildScrollView(
-                    child: Column(
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       hasTopNav ? const TopNavbar() : Container(),
-                      const Audio(),
-                      child
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [const Audio(), child],
+                          ),
+                        ),
+                      )
                     ],
-                  ))
+                  )
                 : Container(
                     child: child,
                   ),

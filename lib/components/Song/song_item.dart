@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
+import 'package:flutter_mp3/components/Song/song_modal.dart';
 import 'package:flutter_mp3/constants/colors/colors_constant.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:flutter_mp3/provider/modal_provider.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
@@ -63,6 +65,7 @@ class SongItem extends StatelessWidget {
 
   buildItem(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var songProvider = Provider.of<SongProvider>(context);
     return InkWell(
       onTap: (canClick && canOpenModal)
           ? () {
@@ -86,7 +89,7 @@ class SongItem extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(song.image ?? Default.noImageUrl),
+                          image: songProvider.getImage(song) as ImageProvider,
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.circular(10)),
                 ),
@@ -103,11 +106,40 @@ class SongItem extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(
-                        song.artist ?? Default.songArtist,
-                        style: Theme.of(context).textTheme.labelMedium,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        children: [
+                          FutureBuilder(
+                              future: songProvider.isDownloaded(song),
+                              builder: ((context, snapshot) {
+                                if (snapshot.data != null &&
+                                    snapshot.data == true) {
+                                  return Row(
+                                    children: [
+                                      Icon(
+                                        Icons.download_for_offline_outlined,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 6,
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              })),
+                          Expanded(
+                            child: Text(
+                              song.artist ?? Default.songArtist,
+                              style: Theme.of(context).textTheme.labelMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -130,7 +162,14 @@ class SongItem extends StatelessWidget {
                 width: 10,
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    var modal = BottomModal(
+                        context: context,
+                        child: SongModal(
+                          song: song,
+                        ));
+                    modal.initModal();
+                  },
                   icon: Icon(Icons.more_vert),
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints())

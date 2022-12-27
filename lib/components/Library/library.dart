@@ -4,12 +4,15 @@ import 'package:flutter_mp3/components/Library/LibraryNavbar/library_navbar.dart
 import 'package:flutter_mp3/components/Library/library_slider_item.dart';
 import 'package:flutter_mp3/components/Library/playlist_item.dart';
 import 'package:flutter_mp3/data/list_playlist.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:provider/provider.dart';
 
 class Library extends StatelessWidget {
   const Library({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var songProvider = Provider.of<SongProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,7 +39,7 @@ class Library extends StatelessWidget {
                               Color.fromARGB(255, 77, 233, 254),
                               Color.fromARGB(255, 73, 181, 255)
                             ],
-                            title: "Bài hát",
+                            title: "Bài hát yêu thích",
                             count: 50,
                           ),
                           LibrabySliderItem(
@@ -66,7 +69,7 @@ class Library extends StatelessWidget {
                             icon: Icons.arrow_downward,
                             colors: [Colors.purpleAccent, Colors.purple],
                             title: "Trên thiết bị",
-                            count: 50,
+                            count: songProvider.listDeviceSong.length,
                             clickEvent: () {
                               Navigator.pushNamed(context, '/library/device');
                             },
@@ -82,7 +85,7 @@ class Library extends StatelessWidget {
                             isRawIcon: true,
                             icon: Icons.cloud_upload,
                             colors: [Colors.orangeAccent, Colors.redAccent],
-                            title: "Trên thiết bị",
+                            title: "Tải lên",
                             count: 50,
                           ),
                         ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchAppbar extends StatelessWidget implements PreferredSizeWidget {
   SearchAppbar({Key? key})
@@ -21,7 +23,12 @@ class SearchAppbar extends StatelessWidget implements PreferredSizeWidget {
           color: Theme.of(context).primaryColorDark,
         ),
       ),
-      title: Search(),
+      title: Search(
+        searchFunc: (value) {
+          var songProvider = Provider.of<SongProvider>(context, listen: false);
+          songProvider.search(value);
+        },
+      ),
       backgroundColor: Theme.of(context).bottomAppBarColor,
     );
   }

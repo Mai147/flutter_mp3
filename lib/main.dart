@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               themeMode: themeObj.mode,
               theme: ThemeData(
-                primarySwatch: Colors.purple,
+                primarySwatch: Colors.green,
                 primaryColor: ColorsConstant.lightPrimaryColor,
                 brightness: Brightness.light,
                 backgroundColor: ColorsConstant.lightBackgroundItemColor,
@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
               ),
               darkTheme: ThemeData(
                 brightness: Brightness.dark,
-                primarySwatch: Colors.purple,
+                primarySwatch: Colors.green,
                 primaryColor: ColorsConstant.darkPrimaryColor,
                 backgroundColor: ColorsConstant.darkBackgroundItemColor,
                 primaryColorDark: ColorsConstant.whiteColor,

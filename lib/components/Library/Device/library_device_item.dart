@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
-import 'package:flutter_mp3/components/Library/Device/library_device_modal.dart';
+import 'package:flutter_mp3/components/Song/song_modal.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
@@ -34,8 +36,7 @@ class LibraryDeviceItem extends StatelessWidget {
                     height: 60,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image:
-                                NetworkImage(song.image ?? Default.noImageUrl),
+                            image: FileImage(File(song.image!)),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -68,19 +69,19 @@ class LibraryDeviceItem extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 16,
+              width: 40,
             ),
             IconButton(
               onPressed: () {
                 var modal = BottomModal(
                     context: context,
-                    child: LibraryDeviceModal(
+                    child: SongModal(
                       song: song,
                     ));
                 modal.initModal();
               },
               icon: const Icon(Icons.more_vert),
-              padding: EdgeInsets.zero,
+              // padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             )
           ],

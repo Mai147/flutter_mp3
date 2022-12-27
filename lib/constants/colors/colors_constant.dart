@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 class ColorsConstant {
   static const Color whiteColor = Colors.white;
   static const Color blackColor = Colors.black;
-  // static const Color darkPrimaryColor = Color.fromARGB(255, 155, 77, 224);
+  static const Color subPrimaryColor = Color(0xFFF2E409);
   static const Color darkPrimaryColor = Color(0xFF2ecc71);
-  // #2ecc71
   static const Color darkBackgroundColor = Color.fromARGB(255, 22, 22, 34);
   static const Color darkBottomNavbarColor = Color.fromARGB(255, 36, 38, 53);
   static const Color darkBackgroundItemColor = Color.fromARGB(255, 45, 45, 55);
@@ -16,7 +15,6 @@ class ColorsConstant {
   static const Color darkBorderColor = Color.fromARGB(255, 53, 55, 70);
   static const Color darkShadowColor = Color.fromARGB(255, 25, 25, 25);
   static const Color darkDisabledColor = Color.fromARGB(255, 150, 150, 150);
-  // static const Color lightPrimaryColor = Color.fromARGB(255, 155, 77, 224);
   static const Color lightPrimaryColor = Color(0xFF2ecc71);
   static const Color lightBackgroundColor = Color.fromARGB(255, 254, 254, 254);
   static const Color lightBottomNavbarColor =
@@ -29,7 +27,7 @@ class ColorsConstant {
   static const Color lightShadowColor = Color.fromARGB(255, 231, 231, 231);
   static const Color lightDisabledColor = Color.fromARGB(255, 150, 150, 150);
   static const Color lightSearchBackgroundColor =
-      Color.fromARGB(255, 55, 56, 76);
+      Color.fromARGB(255, 243, 243, 243);
   static const Color errorColor = Color.fromARGB(255, 246, 86, 86);
   static const Color backgroundModalColor = Color.fromARGB(150, 0, 0, 0);
 }

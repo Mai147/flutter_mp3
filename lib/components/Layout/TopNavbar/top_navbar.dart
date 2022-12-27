@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search.dart';
+import 'package:flutter_mp3/components/Auth/login.dart';
+import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
 import 'package:flutter_mp3/components/Layout/TopNavbar/Search/search_init.dart';
-import 'package:flutter_mp3/pages/setting_page.dart';
+import 'package:flutter_mp3/pages/login_page.dart';
 
 class TopNavbar extends StatelessWidget {
   const TopNavbar({super.key});
@@ -26,7 +27,11 @@ class TopNavbar extends StatelessWidget {
                 color: Color.fromARGB(255, 207, 213, 227),
                 borderRadius: BorderRadius.circular(100)),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                var bottomModal =
+                    BottomModal(context: context, child: LoginPage());
+                bottomModal.initFullScreenModal();
+              },
               padding: EdgeInsets.zero,
               icon: Icon(Icons.person_rounded),
               color: Colors.white,

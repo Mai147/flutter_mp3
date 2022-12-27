@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_mp3/provider/song_provider.dart';
-import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  final Function(String value) searchFunc;
+  final bool isFocus;
+  const Search({required this.searchFunc, this.isFocus = true, super.key});
 
   @override
   State<Search> createState() => _SearchState();
@@ -21,13 +21,12 @@ class _SearchState extends State<Search> {
   TextEditingController searchController = TextEditingController();
 
   void search(String value) {
-    var songProvider = Provider.of<SongProvider>(context, listen: false);
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
         searchValue = value;
       });
-      songProvider.search(searchValue);
+      widget.searchFunc(searchValue);
     });
   }
 
@@ -43,7 +42,7 @@ class _SearchState extends State<Search> {
         height: 36,
         child: TextField(
           controller: searchController,
-          autofocus: true,
+          autofocus: widget.isFocus,
           onChanged: (value) {
             search(value);
           },

@@ -5,6 +5,7 @@ import 'package:flutter_mp3/components/Library/Device/library_device_item.dart';
 import 'package:flutter_mp3/data/list_song.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:provider/provider.dart';
 
 class LibraryDeviceSongPage extends StatelessWidget {
@@ -13,10 +14,11 @@ class LibraryDeviceSongPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var songProvider = Provider.of<SongProvider>(context);
     return Layout(
         hasTopNav: false,
         hasAppBar: true,
-        appBarTitle: "Trên thiết bị (${ListSong.list.length})",
+        appBarTitle: "Trên thiết bị (${songProvider.listDeviceSong.length})",
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -25,7 +27,7 @@ class LibraryDeviceSongPage extends StatelessWidget {
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      audioProvider.updateList(ListSong.list);
+                      audioProvider.updateList(songProvider.listDeviceSong);
                       await audioProvider.shuffleList();
                       var song = audioProvider.getActiveSong();
                       var bottomModal = BottomModal(
@@ -64,7 +66,7 @@ class LibraryDeviceSongPage extends StatelessWidget {
                       onPressed: () {},
                       icon: Icon(Icons.more_vert),
                       color: Theme.of(context).primaryColorDark,
-                      padding: EdgeInsets.zero,
+                      // padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
                   ],
@@ -73,9 +75,11 @@ class LibraryDeviceSongPage extends StatelessWidget {
                   height: 8,
                 ),
                 Column(
-                  children: ListSong.list
-                      .map((e) => LibraryDeviceItem(song: e))
-                      .toList(),
+                  children: songProvider.listDeviceSong.isNotEmpty
+                      ? songProvider.listDeviceSong
+                          .map((e) => LibraryDeviceItem(song: e))
+                          .toList()
+                      : [Text("Không có bài hát nào")],
                 )
               ],
             ),

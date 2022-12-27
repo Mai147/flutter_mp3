@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
+import 'package:flutter_mp3/constants/songs/song_type.dart';
 import 'package:flutter_mp3/data/list_song.dart';
 import 'package:flutter_mp3/models/SongModel.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class AudioProvider extends ChangeNotifier {
   AudioPlayer audioPlayer = AudioPlayer();
-  List<SongModel> listSong = [ListSong.list[0]];
-  List<SongModel> listUnShuffle = [ListSong.list[0]];
-  ConcatenatingAudioSource playList = ConcatenatingAudioSource(children: [
-    AudioSource.uri(
-        Uri.parse("asset:///assets/audio/${ListSong.list[0].audio}"),
-        tag: MediaItem(
-            id: ListSong.list[0].id!,
-            title: ListSong.list[0].name!,
-            artist: ListSong.list[0].artist,
-            artUri: Uri.parse(Default.noImageUrl)))
-  ]);
+  // List<SongModel> listSong = [ListSong.list[0]];
+  // List<SongModel> listUnShuffle = [ListSong.list[0]];
+  // ConcatenatingAudioSource playList = ConcatenatingAudioSource(children: [
+  //   AudioSource.uri(
+  //       Uri.parse("asset:///assets/audio/${ListSong.list[0].audio}"),
+  //       tag: MediaItem(
+  //           id: ListSong.list[0].id!,
+  //           title: ListSong.list[0].name!,
+  //           artist: ListSong.list[0].artist,
+  //           artUri: Uri.parse(Default.noImageUrl)))
+  // ]);
+  List<SongModel> listSong = [];
+  List<SongModel> listUnShuffle = [];
+  ConcatenatingAudioSource playList = ConcatenatingAudioSource(children: []);
   bool isShuffle = false;
   bool isLoading = false;
 
@@ -32,31 +37,38 @@ class AudioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  AudioSource toAudioSource(SongModel song) {
+  Future<AudioSource> toAudioSource(SongModel song) async {
     String uri;
-    if (song.isNetworkSource == true) {
+    if (song.type == SongType.assetType) {
+      uri = "asset:///assets/audio/${song.audio}";
+    } else if (song.type == SongType.networkType) {
       uri = "https://zing-mp3-api.onrender.com/api/v1/file/${song.audio}";
     } else {
-      uri = "asset:///assets/audio/${song.audio}";
+      var documentsDirectory = await getApplicationDocumentsDirectory();
+      var dir = await getExternalStorageDirectory();
+      uri = "${dir?.path ?? documentsDirectory.path}/${song.audio!}";
     }
-    return AudioSource.uri(Uri.parse(uri),
-        tag: MediaItem(
-            id: song.id!,
-            title: song.name!,
-            artist: song.artist,
-            artUri: Uri.parse(song.image ?? Default.noImageUrl)));
+    var tag = MediaItem(
+        id: song.id!,
+        title: song.name!,
+        artist: song.artist,
+        artUri: Uri.parse(song.image ?? Default.noImageUrl));
+    if (song.type == SongType.fileType) {
+      return AudioSource.uri(Uri.file(uri), tag: tag);
+    }
+    return AudioSource.uri(Uri.parse(uri), tag: tag);
   }
 
   Future addItem(SongModel song) async {
     if (listSong.where((element) => element.id == song.id).toList().isEmpty) {
       listSong.add(song);
-      await playList.add(toAudioSource(song));
+      await playList.add(await toAudioSource(song));
     }
   }
 
   Future playSpecificItem(SongModel song) async {
     loading();
-    if (song.isNetworkSource == true) {
+    if (song.type == SongType.networkType) {
       String apiUrl =
           "https://zing-mp3-api.onrender.com/api/v1/song/${song.id}";
       var client = http.Client();
@@ -77,19 +89,22 @@ class AudioProvider extends ChangeNotifier {
 
   Future updateAudioService() async {
     loading();
-    playList = ConcatenatingAudioSource(
-        children: listSong.map((song) {
-      return toAudioSource(song);
-    }).toList());
+    playList.removeRange(0, playList.length);
+    listSong.forEach((song) async {
+      await playList.add(await toAudioSource(song));
+    });
     await audioPlayer.setAudioSource(playList);
+    finishLoading();
+    if (!audioPlayer.playing) {
+      audioPlayer.play();
+    }
     var song = getActiveSong();
-    if (song.isNetworkSource == true) {
+    if (song.type == SongType.fileType) {
       String apiUrl =
           "https://zing-mp3-api.onrender.com/api/v1/song/${song.id}";
       var client = http.Client();
       await client.get(Uri.parse(apiUrl));
     }
-    finishLoading();
   }
 
   void updateList(List<SongModel> list) {
@@ -203,16 +218,16 @@ class AudioProvider extends ChangeNotifier {
     return song;
   }
 
+  bool isInList(SongModel song) {
+    return listSong.where((element) => element.id == song.id).isNotEmpty;
+  }
+
   bool isFirstSong() {
-    var currentSource = getCurrentSource();
-    var index = playList.children.indexOf(currentSource!);
-    return index == 0;
+    return audioPlayer.previousIndex == null;
   }
 
   bool isLastSong() {
-    var currentSource = getCurrentSource();
-    var index = playList.children.indexOf(currentSource!);
-    return index == playList.length - 1;
+    return audioPlayer.nextIndex == null;
   }
 
   bool removeSong(SongModel song) {
@@ -237,10 +252,6 @@ class AudioProvider extends ChangeNotifier {
     listUnShuffle.removeWhere((element) => element.id != currentMediaItem.id);
     playList.removeRange(0, index);
     playList.removeRange(1, playList.length);
-    // var index = listSong.indexWhere((element) => element.id == song.id);
-    // listSong.removeAt(index);
-    // playList.removeAt(index);
-    // listUnShuffle.removeWhere((element) => element.id == song.id);
     notifyListeners();
   }
 }

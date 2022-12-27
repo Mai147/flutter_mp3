@@ -25,11 +25,14 @@ class SongLyrics extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        CupertinoIcons.music_note_list,
-                        size: 60,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+                      (state?.sequence.isNotEmpty ?? false) &&
+                              audioProvider.getActiveSong().lyrics == null
+                          ? Icon(
+                              CupertinoIcons.music_note_list,
+                              size: 60,
+                              color: Theme.of(context).primaryColorDark,
+                            )
+                          : Container(),
                       Text(
                         state?.sequence.isNotEmpty ?? false
                             ? audioProvider.getActiveSong().lyrics ??

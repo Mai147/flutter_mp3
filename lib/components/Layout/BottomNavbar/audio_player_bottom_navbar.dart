@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mp3/components/BottomModal/bottom_modal.dart';
 import 'package:flutter_mp3/constants/default/default.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/provider/audio_provider.dart';
+import 'package:flutter_mp3/provider/song_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +23,7 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
   @override
   Widget build(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var songProvider = Provider.of<SongProvider>(context);
     return StreamBuilder<SequenceState?>(
         stream: audioProvider.audioPlayer.sequenceStateStream,
         builder: (context, snapshot) {
@@ -56,8 +60,9 @@ class _AudioPlayerBottomNavbarState extends State<AudioPlayerBottomNavbar> {
                           height: 40,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image:
-                                      NetworkImage(metadata.artUri.toString()),
+                                  image: songProvider.getImage(
+                                          audioProvider.getActiveSong())
+                                      as ImageProvider,
                                   fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(100)),
                         ),
