@@ -41,33 +41,39 @@ class DiscoveryPage extends StatelessWidget {
         const SizedBox(
           height: 30,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              DiscoverySection(
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: DiscoverySection(
                 title: "Có thể bạn muốn nghe",
                 child: AlbumList(
                   list: listSuggest,
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
-              const DiscoverySection(
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: DiscoverySection(
                   title: "Mới phát hành",
                   child: SizedBox(height: 320, child: DiscoverySong())),
-              DiscoverySection(
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: DiscoverySection(
                 title: "Cuối tuần lên nhạc",
                 child: AlbumList(
                   list: listWeekend,
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              )
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 30,
+            )
+          ],
         )
       ],
     ));

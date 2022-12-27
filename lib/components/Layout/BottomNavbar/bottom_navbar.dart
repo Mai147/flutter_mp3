@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 List<String> listBottomAppbarRoute = [
   "/library",
   "/discovery",
-  "/zingchart",
+  "/krchart",
   "/radio",
   "/describe"
 ];
@@ -67,7 +67,7 @@ class BottomNavbar extends StatelessWidget {
                 ),
                 BottomNavbarItem(
                   icon: Icons.show_chart,
-                  label: "Zingchart",
+                  label: "Krchart",
                   isActive: currentRoute == listBottomAppbarRoute[2],
                   onClick: () {
                     changeRoute(2);

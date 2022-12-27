@@ -8,7 +8,7 @@ import 'package:flutter_mp3/pages/search_page.dart';
 import 'package:flutter_mp3/pages/setting_page.dart';
 import 'package:flutter_mp3/pages/song_page.dart';
 import 'package:flutter_mp3/pages/splash_page.dart';
-import 'package:flutter_mp3/pages/zingchart_page.dart';
+import 'package:flutter_mp3/pages/krchart_page.dart';
 
 import '../models/SongModel.dart';
 
@@ -16,7 +16,7 @@ final routes = {
   '/': (context) => const SpalshPage(),
   '/library': (context) => const LibraryPage(),
   '/discovery': (context) => const DiscoveryPage(),
-  '/zingchart': (context) => const ZingchartPage(),
+  '/krchart': (context) => const KrChartPage(),
   '/radio': (context) => const RadioPage(),
   '/describe': (context) => const DescribePage(),
   '/library/device': (context) => const LibraryDeviceSongPage(),
