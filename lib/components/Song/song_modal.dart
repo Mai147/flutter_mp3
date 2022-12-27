@@ -79,7 +79,11 @@ class SongModal extends StatelessWidget {
                 title: "Phát tiếp theo",
                 icon: Icons.add,
                 clickEvent: () async {
-                  await audioProvider.addItem(song);
+                  if (audioProvider.listSong.isNotEmpty) {
+                    await audioProvider.addItem(song);
+                  } else {
+                    await audioProvider.initAudioPLayer(song);
+                  }
                 },
               )
             : Container(),

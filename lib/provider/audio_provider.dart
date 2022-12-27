@@ -150,12 +150,14 @@ class AudioProvider extends ChangeNotifier {
   }
 
   Future initAudioPLayer(SongModel song) async {
-    var currentMediaItem = getCurrentMediaItem();
-    if (currentMediaItem.id == song.id) {
-      return;
+    if (audioPlayer.sequenceState?.currentSource != null) {
+      var currentMediaItem = getCurrentMediaItem();
+      if (currentMediaItem.id == song.id) {
+        return;
+      }
     }
-
     await playSpecificItem(song);
+
     notifyListeners();
   }
 

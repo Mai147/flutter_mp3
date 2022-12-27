@@ -4,12 +4,35 @@ import 'package:flutter_mp3/components/Layout/BottomNavbar/bottom_navbar_item.da
 import 'package:flutter_mp3/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 
+List<String> listBottomAppbarRoute = [
+  "/library",
+  "/discovery",
+  "/zingchart",
+  "/radio",
+  "/describe"
+];
+
 class BottomNavbar extends StatelessWidget {
   const BottomNavbar({super.key});
 
   @override
   Widget build(BuildContext context) {
     var audioProvider = Provider.of<AudioProvider>(context);
+    var currentRoute = ModalRoute.of(context)?.settings.name;
+
+    changeRoute(var index) {
+      if (currentRoute != null) {
+        if (currentRoute != listBottomAppbarRoute[index]) {
+          if (listBottomAppbarRoute.contains(currentRoute)) {
+            Navigator.pushReplacementNamed(
+                context, listBottomAppbarRoute[index]);
+          } else {
+            Navigator.pushNamed(context, listBottomAppbarRoute[index]);
+          }
+        }
+      }
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -29,21 +52,43 @@ class BottomNavbar extends StatelessWidget {
                 BottomNavbarItem(
                   icon: Icons.video_library,
                   label: "Cá nhân",
-                  isActive: true,
+                  isActive: currentRoute == listBottomAppbarRoute[0],
                   onClick: () {
-                    Navigator.pushNamed(context, "/library");
+                    changeRoute(0);
                   },
                 ),
                 BottomNavbarItem(
                   icon: Icons.adjust,
                   label: "Khám phá",
+                  isActive: currentRoute == listBottomAppbarRoute[1],
                   onClick: () {
-                    Navigator.pushNamed(context, "/discovery");
+                    changeRoute(1);
                   },
                 ),
-                BottomNavbarItem(icon: Icons.show_chart, label: "Zingchart"),
-                BottomNavbarItem(icon: Icons.radio, label: "Radio"),
-                BottomNavbarItem(icon: Icons.newspaper, label: "Theo dõi"),
+                BottomNavbarItem(
+                  icon: Icons.show_chart,
+                  label: "Zingchart",
+                  isActive: currentRoute == listBottomAppbarRoute[2],
+                  onClick: () {
+                    changeRoute(2);
+                  },
+                ),
+                BottomNavbarItem(
+                  icon: Icons.radio,
+                  label: "Radio",
+                  isActive: currentRoute == listBottomAppbarRoute[3],
+                  onClick: () {
+                    changeRoute(3);
+                  },
+                ),
+                BottomNavbarItem(
+                  icon: Icons.newspaper,
+                  label: "Theo dõi",
+                  isActive: currentRoute == listBottomAppbarRoute[4],
+                  onClick: () {
+                    changeRoute(4);
+                  },
+                ),
               ],
             )),
       ],
