@@ -26,14 +26,14 @@ class SongProvider extends ChangeNotifier {
     } else {
       page = 1;
     }
-    if (totalPage == -1 || nextPage <= totalPage) {
+    if (totalPage == -1 || page <= totalPage) {
       String apiUrl =
           "https://zing-mp3-api.onrender.com/api/v1/song?limit=$pageSize&search=$searchValue&page=$page";
       var client = http.Client();
       var jsonString = await client.get(Uri.parse(apiUrl));
       var jsonObject = jsonDecode(jsonString.body);
       var songListObject = jsonObject['data'] as List;
-      totalPage = jsonObject['paginate']['totalPage'];
+      totalPage = jsonObject['paginate']['totalPages'];
       var newList = songListObject.map((e) {
         return SongModel.fromJson(e);
       }).toList();
